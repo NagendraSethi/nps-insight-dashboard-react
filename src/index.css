@@ -99,7 +99,7 @@ table th, table td {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 16px;
-  margin-bottom: 24px;
+  height: 100%;
 }
 
 .nps-summary-card {
@@ -144,13 +144,13 @@ table th, table td {
 }
 
 .card-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
-  color: #555;
-  margin-bottom: 10px;
+  color: #333;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .promoter {
@@ -168,14 +168,16 @@ table th, table td {
 .progress-bar {
   height: 20px;
   display: flex;
-  border-radius: 3px;
+  border-radius: 6px;
   overflow: hidden;
-  margin-top: 5px;
+  margin-top: 8px;
   margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .progress-segment {
   height: 100%;
+  transition: width 0.5s ease-out;
 }
 
 .filter-pill {
@@ -187,57 +189,40 @@ table th, table td {
   margin-right: 8px;
   font-size: 12px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-/* Updated styles for dashboard grid */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.filter-pill:hover {
+  background-color: #d0d0d0;
 }
 
-@media (max-width: 1200px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
+/* Dashboard grid layouts */
+@media (min-width: 768px) {
+  .container {
+    max-width: 1400px;
   }
 }
 
-@media (max-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.dashboard-grid-full {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.nps-card, .nps-summary-card {
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
-@media (max-width: 1200px) {
-  .dashboard-grid-full {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.card-hover-effect {
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-@media (max-width: 768px) {
-  .dashboard-grid-full {
-    grid-template-columns: 1fr;
-  }
-}
-
-.dark-blue-bg {
-  background-color: #0f1b35;
-  color: white;
-}
-
-.hidden-scrollbar {
-  overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-}
-
-.hidden-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+.card-hover-effect:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }

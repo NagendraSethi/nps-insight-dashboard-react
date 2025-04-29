@@ -6,12 +6,12 @@ const RegionBar = ({ region, value, total, color }) => {
   return (
     <div className="mb-3">
       <div className="flex justify-between text-xs mb-1">
-        <span>{region}</span>
+        <span className="font-medium">{region}</span>
         <span>{value}</span>
       </div>
-      <div className="bg-gray-700 h-2 rounded-md">
+      <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
         <div 
-          className="h-full rounded-md" 
+          className="h-full rounded-full transition-all duration-500 ease-out"
           style={{ 
             width: `${percentage}%`,
             backgroundColor: color
@@ -32,8 +32,8 @@ const RegionBreakdown = ({ data, title, total }) => {
   };
 
   return (
-    <div className="px-4 mt-2">
-      <h4 className="mb-3 text-gray-300 text-xs">{title}</h4>
+    <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+      <h4 className="mb-3 text-gray-500 text-xs font-medium">{title}</h4>
       {Object.keys(data).map(region => (
         <RegionBar 
           key={region}

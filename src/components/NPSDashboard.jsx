@@ -8,6 +8,8 @@ import BarChart from './BarChart';
 import DataTable from './DataTable';
 import StackedBarChart from './StackedBarChart';
 import { npsData } from '../data/npsData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 
 const NPSDashboard = () => {
   // Transform data for pie charts
@@ -122,55 +124,69 @@ const NPSDashboard = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 mb-10">
+    <div className="container mx-auto px-4 pb-8">
+      {/* Dashboard Header */}
+      <div className="mb-6 pt-6">
+        <h1 className="text-2xl font-bold text-gray-800 flex items-center">
+          <FontAwesomeIcon icon={faChartLine} className="mr-2" />
+          NPS Analytics Dashboard
+        </h1>
+        <p className="text-gray-500 mt-1">Track customer satisfaction and loyalty metrics</p>
+      </div>
+      
       <PageFilter />
       
-      <div className="dashboard-grid">
-        <div>
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div className="md:col-span-1">
           <MetricCard 
             title="Expected Responses" 
             value={npsData.expectedResponses.toLocaleString()} 
+            color="#1e3a8a"
           />
-          <div className="mt-2">
+          <div className="mt-0">
             <RegionBreakdown 
               data={expectedByRegion} 
-              title="All" 
+              title="By Region" 
               total={npsData.expectedResponses} 
             />
           </div>
         </div>
         
-        <div>
+        <div className="md:col-span-1">
           <MetricCard 
             title="Responses Received" 
             value={npsData.responsesReceived.toLocaleString()} 
             subtitle={`(${npsData.responseRate}%)`}
+            color="#0f766e"
           />
-          <div className="mt-2">
+          <div className="mt-0">
             <RegionBreakdown 
               data={receivedByRegion} 
-              title="All" 
+              title="By Region" 
               total={npsData.responsesReceived} 
             />
           </div>
         </div>
         
-        <div>
+        <div className="md:col-span-1">
           <MetricCard 
             title="NPS Score" 
             value={npsData.npsScore.toFixed(1)} 
+            color="#7e22ce"
           />
-          <div className="mt-2">
+          <div className="mt-0">
             <RegionBreakdown 
               data={npsScoreByRegion} 
-              title="All" 
+              title="By Region" 
               total={100} 
             />
           </div>
         </div>
       </div>
       
-      <div className="dashboard-grid-full mt-8">
+      {/* Charts Row 1 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         <PieChart 
           data={categoryData} 
           title="Responses by Category" 
@@ -178,21 +194,6 @@ const NPSDashboard = () => {
           colors={categoryColors}
         />
         
-        <DataTable 
-          title="Respondents by Tower" 
-          columns={towerColumns} 
-          data={towerTableData}
-          showProgressBar={true}
-        />
-        
-        <DataTable 
-          title="Response Rate by Tower" 
-          columns={responseRateColumns} 
-          data={npsData.responseRateByTower}
-        />
-      </div>
-      
-      <div className="dashboard-grid-full mt-8">
         <PieChart 
           data={stakeholderTypeData} 
           title="Stakeholders by Customer Type" 
@@ -200,28 +201,16 @@ const NPSDashboard = () => {
           colors={stakeholderTypeColors}
         />
         
-        <DataTable 
-          title="Respondents by Custom Tag" 
-          columns={customTagColumns} 
-          data={customTagTableData}
-          showProgressBar={true}
-        />
-        
-        <DataTable 
-          title="Declined Rate by Tower" 
-          columns={declinedRateColumns} 
-          data={npsData.declinedRateByTower}
-        />
-      </div>
-      
-      <div className="dashboard-grid-full mt-8">
         <PieChart 
           data={confidentialityData} 
           title="Responses by Confidentiality" 
           infoText="Breakdown of responses by confidentiality setting"
           colors={confidentialityColors}
         />
-        
+      </div>
+
+      {/* Charts Row 2 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         <BarChart 
           data={teamBarData} 
           title="Stakeholders mapped to #Teams" 
@@ -231,6 +220,37 @@ const NPSDashboard = () => {
         <StackedBarChart 
           data={npsData.departmentData} 
           title="Responses by Department" 
+        />
+
+        <DataTable 
+          title="Response Rate by Tower" 
+          columns={responseRateColumns} 
+          data={npsData.responseRateByTower}
+        />
+      </div>
+      
+      {/* Tables Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <DataTable 
+          title="Respondents by Tower" 
+          columns={towerColumns} 
+          data={towerTableData}
+          showProgressBar={true}
+        />
+
+        <DataTable 
+          title="Respondents by Custom Tag" 
+          columns={customTagColumns} 
+          data={customTagTableData}
+          showProgressBar={true}
+        />
+      </div>
+      
+      <div className="mt-6">
+        <DataTable 
+          title="Declined Rate by Tower" 
+          columns={declinedRateColumns} 
+          data={npsData.declinedRateByTower}
         />
       </div>
     </div>

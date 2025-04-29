@@ -19,33 +19,40 @@ const ProgressBar = ({ segments }) => {
 
 const DataTable = ({ title, columns, data, showProgressBar = false }) => {
   return (
-    <div className="nps-card h-full">
-      <div className="flex justify-between items-center mb-3">
+    <div className="nps-card">
+      <div className="flex justify-between items-center mb-4">
         <div className="card-title">
           {title}
           <FontAwesomeIcon icon={faInfoCircle} size="sm" className="text-gray-500" />
         </div>
-        <FontAwesomeIcon icon={faExpand} size="sm" className="text-gray-500 cursor-pointer" />
+        <FontAwesomeIcon 
+          icon={faExpand} 
+          size="sm" 
+          className="text-gray-500 cursor-pointer hover:text-gray-700 transition-colors" 
+        />
       </div>
       
-      <div className="table-container">
+      <div className="table-container rounded-md border border-gray-200 overflow-hidden">
         <table className="w-full">
-          <thead>
-            <tr className="border-b">
+          <thead className="bg-gray-50">
+            <tr>
               {columns.map((column, index) => (
-                <th key={index} className="pb-2 text-xs font-medium text-gray-600">
+                <th 
+                  key={index} 
+                  className="py-3 px-4 text-xs font-medium text-gray-600 uppercase tracking-wider text-left border-b"
+                >
                   {column.header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-200">
             {data.map((row, rowIndex) => (
-              <tr key={rowIndex} className="border-b">
+              <tr key={rowIndex} className="hover:bg-gray-50 transition-colors">
                 {columns.map((column, colIndex) => {
                   if (column.key === 'progress') {
                     return (
-                      <td key={colIndex} className="py-2">
+                      <td key={colIndex} className="py-3 px-4">
                         {showProgressBar && (
                           <ProgressBar segments={row.segments} />
                         )}
@@ -54,7 +61,7 @@ const DataTable = ({ title, columns, data, showProgressBar = false }) => {
                   }
                   
                   return (
-                    <td key={colIndex} className="py-2 text-sm">
+                    <td key={colIndex} className="py-3 px-4 text-sm">
                       {column.format 
                         ? column.format(row[column.key], row) 
                         : row[column.key]}
@@ -66,6 +73,9 @@ const DataTable = ({ title, columns, data, showProgressBar = false }) => {
           </tbody>
         </table>
       </div>
+      {data.length === 0 && (
+        <div className="text-center py-8 text-gray-500">No data available</div>
+      )}
     </div>
   );
 };
