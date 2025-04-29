@@ -32,7 +32,7 @@ const RegionBreakdown = ({ data, title, total }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+    <div className="bg-white rounded-lg shadow-md p-4 h-full">
       <h4 className="mb-3 text-gray-500 text-xs font-medium">{title}</h4>
       {Object.keys(data).map(region => (
         <RegionBar 

@@ -10,7 +10,7 @@ const PageFilter = () => {
         <div className="flex items-center gap-3 mb-2 md:mb-0">
           <FontAwesomeIcon icon={faFilter} className="text-gray-600" />
           <div className="font-medium text-gray-800">Page Filters</div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <FilterPill label="All Geos" />
             <FilterPill label="Last 12 Months" />
             <FilterPill label="All Towers" />

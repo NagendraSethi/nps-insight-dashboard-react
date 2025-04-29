@@ -19,12 +19,12 @@ const PieChart = ({ data, title, infoText, colors }) => {
   const totalCount = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="nps-card card-hover-effect">
-      <div className="card-title">
+    <div className="bg-white rounded-lg shadow-md p-4 h-full">
+      <div className="card-title mb-3">
         {title}
-        <FontAwesomeIcon icon={faInfoCircle} size="sm" className="text-gray-500 cursor-help" title={infoText} />
+        <FontAwesomeIcon icon={faInfoCircle} size="sm" className="text-gray-500 cursor-help ml-2" title={infoText} />
       </div>
-      <div className="flex items-center justify-center" style={{ height: 220 }}>
+      <div className="flex items-center justify-center" style={{ height: 200 }}>
         <ResponsiveContainer width="100%" height="100%">
           <ReChartPie data={data}>
             <Pie
@@ -55,9 +55,9 @@ const PieChart = ({ data, title, infoText, colors }) => {
         </ResponsiveContainer>
       </div>
 
-      <div className="flex flex-wrap justify-center mt-2 gap-4">
+      <div className="flex flex-wrap justify-center mt-2 gap-2">
         {data.map((entry, index) => (
-          <div key={index} className="flex items-center">
+          <div key={index} className="flex items-center mx-2 my-1">
             <div 
               style={{ backgroundColor: colors[index % colors.length] }} 
               className="w-3 h-3 mr-2 rounded-sm"

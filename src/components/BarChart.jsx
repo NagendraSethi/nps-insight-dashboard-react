@@ -17,16 +17,21 @@ const CustomTooltip = ({ active, payload }) => {
 
 const BarChart = ({ data, title, infoText }) => {
   return (
-    <div className="nps-card h-full card-hover-effect">
-      <div className="card-title">
-        {title}
-        <FontAwesomeIcon icon={faInfoCircle} size="sm" className="text-gray-500 cursor-help" title={infoText} />
+    <div className="bg-white rounded-lg shadow-md p-4 h-full">
+      <div className="flex items-center mb-3">
+        <h3 className="text-base font-medium text-gray-800">{title}</h3>
+        <FontAwesomeIcon 
+          icon={faInfoCircle} 
+          size="sm" 
+          className="text-gray-500 cursor-help ml-2" 
+          title={infoText} 
+        />
       </div>
-      <div style={{ height: 280 }}>
+      <div style={{ height: 250 }}>
         <ResponsiveContainer width="100%" height="100%">
           <ReBarChart 
             data={data} 
-            margin={{ top: 20, right: 30, left: 0, bottom: 30 }}
+            margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
             barSize={40}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.2} />

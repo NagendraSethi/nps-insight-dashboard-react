@@ -19,11 +19,15 @@ const ProgressBar = ({ segments }) => {
 
 const DataTable = ({ title, columns, data, showProgressBar = false }) => {
   return (
-    <div className="nps-card">
+    <div className="bg-white rounded-lg shadow-md p-4 h-full">
       <div className="flex justify-between items-center mb-4">
-        <div className="card-title">
-          {title}
-          <FontAwesomeIcon icon={faInfoCircle} size="sm" className="text-gray-500" />
+        <div className="flex items-center">
+          <h3 className="text-base font-medium text-gray-800">{title}</h3>
+          <FontAwesomeIcon 
+            icon={faInfoCircle} 
+            size="sm" 
+            className="text-gray-500 ml-2" 
+          />
         </div>
         <FontAwesomeIcon 
           icon={faExpand} 
