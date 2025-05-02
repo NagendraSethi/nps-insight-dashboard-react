@@ -5,11 +5,11 @@ import { faInfoCircle, faExpand } from '@fortawesome/free-solid-svg-icons';
 
 const ProgressBar = ({ segments }) => {
   return (
-    <div className="progress-bar">
+    <div className="progress" style={{ height: '8px', borderRadius: '5px' }}>
       {segments.map((segment, index) => (
         <div 
           key={index} 
-          className={`progress-segment ${segment.class}`}
+          className={`progress-bar ${segment.class}`}
           style={{ width: `${segment.percentage}%` }}
         />
       ))}
@@ -19,67 +19,67 @@ const ProgressBar = ({ segments }) => {
 
 const DataTable = ({ title, columns, data, showProgressBar = false }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 h-full">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center">
-          <h3 className="text-base font-medium text-gray-800">{title}</h3>
+    <div className="card shadow h-100">
+      <div className="card-body">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <div className="d-flex align-items-center">
+            <h5 className="card-title fs-6 fw-medium text-dark mb-0">{title}</h5>
+            <FontAwesomeIcon 
+              icon={faInfoCircle} 
+              size="sm" 
+              className="text-secondary ms-2" 
+            />
+          </div>
           <FontAwesomeIcon 
-            icon={faInfoCircle} 
+            icon={faExpand} 
             size="sm" 
-            className="text-gray-500 ml-2" 
+            className="text-secondary cursor-pointer" 
           />
         </div>
-        <FontAwesomeIcon 
-          icon={faExpand} 
-          size="sm" 
-          className="text-gray-500 cursor-pointer hover:text-gray-700 transition-colors" 
-        />
-      </div>
-      
-      <div className="table-container rounded-md border border-gray-200 overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              {columns.map((column, index) => (
-                <th 
-                  key={index} 
-                  className="py-3 px-4 text-xs font-medium text-gray-600 uppercase tracking-wider text-left border-b"
-                >
-                  {column.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {data.map((row, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-gray-50 transition-colors">
-                {columns.map((column, colIndex) => {
-                  if (column.key === 'progress') {
+        
+        <div className="table-responsive border rounded">
+          <table className="table table-hover mb-0">
+            <thead className="table-light">
+              <tr>
+                {columns.map((column, index) => (
+                  <th 
+                    key={index} 
+                    className="py-2 small fw-medium text-secondary text-start"
+                  >
+                    {column.header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row, rowIndex) => (
+                <tr key={rowIndex} className="border-bottom">
+                  {columns.map((column, colIndex) => {
+                    if (column.key === 'progress') {
+                      return (
+                        <td key={colIndex} className="py-2">
+                          {showProgressBar && <ProgressBar segments={row.segments} />}
+                        </td>
+                      );
+                    }
+                    
                     return (
-                      <td key={colIndex} className="py-3 px-4">
-                        {showProgressBar && (
-                          <ProgressBar segments={row.segments} />
-                        )}
+                      <td key={colIndex} className="py-2 small">
+                        {column.format 
+                          ? column.format(row[column.key], row) 
+                          : row[column.key]}
                       </td>
                     );
-                  }
-                  
-                  return (
-                    <td key={colIndex} className="py-3 px-4 text-sm">
-                      {column.format 
-                        ? column.format(row[column.key], row) 
-                        : row[column.key]}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {data.length === 0 && (
+          <div className="text-center py-4 text-secondary">No data available</div>
+        )}
       </div>
-      {data.length === 0 && (
-        <div className="text-center py-8 text-gray-500">No data available</div>
-      )}
     </div>
   );
 };

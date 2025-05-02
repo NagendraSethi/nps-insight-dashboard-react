@@ -66,9 +66,9 @@ const NPSDashboard = () => {
     return {
       ...item,
       segments: [
-        { percentage: (item.promoters / total) * 100, class: 'promoter' },
-        { percentage: (item.passives / total) * 100, class: 'passive' },
-        { percentage: (item.detractors / total) * 100, class: 'detractor' }
+        { percentage: (item.promoters / total) * 100, class: 'bg-success' },
+        { percentage: (item.passives / total) * 100, class: 'bg-warning' },
+        { percentage: (item.detractors / total) * 100, class: 'bg-danger' }
       ]
     };
   });
@@ -86,9 +86,9 @@ const NPSDashboard = () => {
     return {
       ...item,
       segments: [
-        { percentage: (item.promoters / total) * 100, class: 'promoter' },
-        { percentage: (item.passives / total) * 100, class: 'passive' },
-        { percentage: (item.detractors / total) * 100, class: 'detractor' }
+        { percentage: (item.promoters / total) * 100, class: 'bg-success' },
+        { percentage: (item.passives / total) * 100, class: 'bg-warning' },
+        { percentage: (item.detractors / total) * 100, class: 'bg-danger' }
       ]
     };
   });
@@ -124,143 +124,167 @@ const NPSDashboard = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 pb-8">
+    <div className="container-fluid py-4">
       {/* Dashboard Header */}
-      <div className="mb-6 pt-6">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-          <FontAwesomeIcon icon={faChartLine} className="mr-2" />
+      <div className="mb-4 pt-3">
+        <h1 className="d-flex align-items-center fs-3 fw-bold text-dark">
+          <FontAwesomeIcon icon={faChartLine} className="me-2" />
           NPS Analytics Dashboard
         </h1>
-        <p className="text-gray-500 mt-1">Track customer satisfaction and loyalty metrics</p>
+        <p className="text-secondary mt-1">Track customer satisfaction and loyalty metrics</p>
       </div>
       
       <PageFilter />
       
-      {/* Key Metrics Section - Vertical Layout with Side-by-Side Cards */}
-      <div className="mb-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      {/* Key Metrics Section */}
+      <div className="mb-4">
+        <div className="row g-4 mb-4">
           {/* First Key Metric Card */}
-          <div className="flex flex-col h-full">
-            <MetricCard 
-              title="Expected Responses" 
-              value={npsData.expectedResponses.toLocaleString()} 
-              color="#1e3a8a"
-            />
-            <div className="mt-4">
-              <RegionBreakdown 
-                data={expectedByRegion} 
-                title="By Region" 
-                total={npsData.expectedResponses} 
+          <div className="col-12 col-lg-4">
+            <div className="d-flex flex-column h-100">
+              <MetricCard 
+                title="Expected Responses" 
+                value={npsData.expectedResponses.toLocaleString()} 
+                color="#1e3a8a"
               />
+              <div className="mt-3">
+                <RegionBreakdown 
+                  data={expectedByRegion} 
+                  title="By Region" 
+                  total={npsData.expectedResponses} 
+                />
+              </div>
             </div>
           </div>
           
           {/* Second Key Metric Card */}
-          <div className="flex flex-col h-full">
-            <MetricCard 
-              title="Responses Received" 
-              value={npsData.responsesReceived.toLocaleString()} 
-              subtitle={`(${npsData.responseRate}%)`}
-              color="#0f766e"
-            />
-            <div className="mt-4">
-              <RegionBreakdown 
-                data={receivedByRegion} 
-                title="By Region" 
-                total={npsData.responsesReceived} 
+          <div className="col-12 col-lg-4">
+            <div className="d-flex flex-column h-100">
+              <MetricCard 
+                title="Responses Received" 
+                value={npsData.responsesReceived.toLocaleString()} 
+                subtitle={`(${npsData.responseRate}%)`}
+                color="#0f766e"
               />
+              <div className="mt-3">
+                <RegionBreakdown 
+                  data={receivedByRegion} 
+                  title="By Region" 
+                  total={npsData.responsesReceived} 
+                />
+              </div>
             </div>
           </div>
           
           {/* Third Key Metric Card */}
-          <div className="flex flex-col h-full">
-            <MetricCard 
-              title="NPS Score" 
-              value={npsData.npsScore.toFixed(1)} 
-              color="#7e22ce"
-            />
-            <div className="mt-4">
-              <RegionBreakdown 
-                data={npsScoreByRegion} 
-                title="By Region" 
-                total={100} 
+          <div className="col-12 col-lg-4">
+            <div className="d-flex flex-column h-100">
+              <MetricCard 
+                title="NPS Score" 
+                value={npsData.npsScore.toFixed(1)} 
+                color="#7e22ce"
               />
+              <div className="mt-3">
+                <RegionBreakdown 
+                  data={npsScoreByRegion} 
+                  title="By Region" 
+                  total={100} 
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
       
-      {/* Charts Section - Vertical Layout */}
-      <div className="mb-6">
+      {/* Charts Section */}
+      <div className="mb-4">
         {/* Chart Row 1 - Related Charts Side by Side */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <PieChart 
-            data={categoryData} 
-            title="Responses by Category" 
-            infoText="Breakdown of responses by promoters, passives, and detractors"
-            colors={categoryColors}
-          />
+        <div className="row g-4 mb-4">
+          <div className="col-12 col-lg-4">
+            <PieChart 
+              data={categoryData} 
+              title="Responses by Category" 
+              infoText="Breakdown of responses by promoters, passives, and detractors"
+              colors={categoryColors}
+            />
+          </div>
           
-          <PieChart 
-            data={stakeholderTypeData} 
-            title="Stakeholders by Customer Type" 
-            infoText="Distribution of stakeholders by their customer type"
-            colors={stakeholderTypeColors}
-          />
+          <div className="col-12 col-lg-4">
+            <PieChart 
+              data={stakeholderTypeData} 
+              title="Stakeholders by Customer Type" 
+              infoText="Distribution of stakeholders by their customer type"
+              colors={stakeholderTypeColors}
+            />
+          </div>
           
-          <PieChart 
-            data={confidentialityData} 
-            title="Responses by Confidentiality" 
-            infoText="Breakdown of responses by confidentiality setting"
-            colors={confidentialityColors}
-          />
+          <div className="col-12 col-lg-4">
+            <PieChart 
+              data={confidentialityData} 
+              title="Responses by Confidentiality" 
+              infoText="Breakdown of responses by confidentiality setting"
+              colors={confidentialityColors}
+            />
+          </div>
         </div>
         
         {/* Chart Row 2 - Bar Charts and Related Data */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <BarChart 
-            data={teamBarData} 
-            title="Stakeholders mapped to #Teams" 
-            infoText="Number of stakeholders mapped to different numbers of teams"
-          />
+        <div className="row g-4 mb-4">
+          <div className="col-12 col-lg-4">
+            <BarChart 
+              data={teamBarData} 
+              title="Stakeholders mapped to #Teams" 
+              infoText="Number of stakeholders mapped to different numbers of teams"
+            />
+          </div>
           
-          <StackedBarChart 
-            data={npsData.departmentData} 
-            title="Responses by Department" 
-          />
+          <div className="col-12 col-lg-4">
+            <StackedBarChart 
+              data={npsData.departmentData} 
+              title="Responses by Department" 
+            />
+          </div>
 
-          <DataTable 
-            title="Response Rate by Tower" 
-            columns={responseRateColumns} 
-            data={npsData.responseRateByTower}
-          />
+          <div className="col-12 col-lg-4">
+            <DataTable 
+              title="Response Rate by Tower" 
+              columns={responseRateColumns} 
+              data={npsData.responseRateByTower}
+            />
+          </div>
         </div>
       </div>
       
-      {/* Tables Section - Vertical Layout with Side-by-Side Tables */}
-      <div className="mb-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <DataTable 
-            title="Respondents by Tower" 
-            columns={towerColumns} 
-            data={towerTableData}
-            showProgressBar={true}
-          />
+      {/* Tables Section */}
+      <div className="mb-4">
+        <div className="row g-4 mb-4">
+          <div className="col-12 col-lg-6">
+            <DataTable 
+              title="Respondents by Tower" 
+              columns={towerColumns} 
+              data={towerTableData}
+              showProgressBar={true}
+            />
+          </div>
 
-          <DataTable 
-            title="Respondents by Custom Tag" 
-            columns={customTagColumns} 
-            data={customTagTableData}
-            showProgressBar={true}
-          />
+          <div className="col-12 col-lg-6">
+            <DataTable 
+              title="Respondents by Custom Tag" 
+              columns={customTagColumns} 
+              data={customTagTableData}
+              showProgressBar={true}
+            />
+          </div>
         </div>
         
-        <div className="grid grid-cols-1">
-          <DataTable 
-            title="Declined Rate by Tower" 
-            columns={declinedRateColumns} 
-            data={npsData.declinedRateByTower}
-          />
+        <div className="row">
+          <div className="col-12">
+            <DataTable 
+              title="Declined Rate by Tower" 
+              columns={declinedRateColumns} 
+              data={npsData.declinedRateByTower}
+            />
+          </div>
         </div>
       </div>
     </div>

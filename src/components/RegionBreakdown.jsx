@@ -5,16 +5,17 @@ const RegionBar = ({ region, value, total, color }) => {
   const percentage = (value / total) * 100;
   return (
     <div className="mb-3">
-      <div className="flex justify-between text-xs mb-1">
-        <span className="font-medium">{region}</span>
+      <div className="d-flex justify-content-between small mb-1">
+        <span className="fw-medium">{region}</span>
         <span>{value}</span>
       </div>
-      <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
+      <div className="bg-light rounded" style={{ height: '8px' }}>
         <div 
-          className="h-full rounded-full transition-all duration-500 ease-out"
+          className="rounded h-100 transition-all"
           style={{ 
             width: `${percentage}%`,
-            backgroundColor: color
+            backgroundColor: color,
+            transition: 'width 0.5s ease-out'
           }}
         ></div>
       </div>
@@ -32,17 +33,19 @@ const RegionBreakdown = ({ data, title, total }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 h-full">
-      <h4 className="mb-3 text-gray-500 text-xs font-medium">{title}</h4>
-      {Object.keys(data).map(region => (
-        <RegionBar 
-          key={region}
-          region={region} 
-          value={data[region]} 
-          total={total} 
-          color={colors[region]}
-        />
-      ))}
+    <div className="card shadow h-100">
+      <div className="card-body">
+        <h6 className="mb-3 text-muted small fw-medium">{title}</h6>
+        {Object.keys(data).map(region => (
+          <RegionBar 
+            key={region}
+            region={region} 
+            value={data[region]} 
+            total={total} 
+            color={colors[region]}
+          />
+        ))}
+      </div>
     </div>
   );
 };

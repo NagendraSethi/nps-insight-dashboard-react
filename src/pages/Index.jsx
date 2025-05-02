@@ -4,7 +4,7 @@ import NPSDashboard from '../components/NPSDashboard';
 
 const Index = () => {
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-light min-vh-100">
       <NPSDashboard />
     </div>
   );
