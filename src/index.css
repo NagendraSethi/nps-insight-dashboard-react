@@ -54,3 +54,18 @@ body {
 .progress-bar {
   transition: width 0.5s ease-out;
 }
+
+/* Dropdown positioning */
+.dropdown-menu {
+  z-index: 1050;
+}
+
+.dropdown {
+  position: relative;
+}
+
+/* Filter styles */
+.filter-active {
+  background-color: #e9ecef;
+  font-weight: 500;
+}
