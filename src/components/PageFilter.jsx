@@ -18,46 +18,75 @@ const PageFilter = ({ onFilterChange }) => {
   const [geoFilter, setGeoFilter] = useState("All Geos");
   const [timeFilter, setTimeFilter] = useState("Last 12 Months");
   const [towerFilter, setTowerFilter] = useState("All Towers");
+  const [userTagFilter, setUserTagFilter] = useState("All User Types");
+  const [surveyTagFilter, setSurveyTagFilter] = useState("All Survey Tags");
+  
   const [geoOptions] = useState(["All Geos", "NA", "EMEA", "APAC", "LATAM"]);
   const [timeOptions] = useState(["Last 12 Months", "Last 6 Months", "Last 3 Months", "Last Month"]);
   const [towerOptions] = useState(["All Towers", "CHI", "LYC", "PTP", "EMED", "LIVE NA", "DTR", "ECM", "CRE", "SCM"]);
+  const [userTagOptions] = useState(["All User Types", "Manager", "End User", "Senior Stakeholder", "Other"]);
+  const [surveyTagOptions] = useState(["All Survey Tags", "Strategic", "Operational", "Technical", "Project-based"]);
   
   // Track if dropdown menus are open
   const [geoOpen, setGeoOpen] = useState(false);
   const [timeOpen, setTimeOpen] = useState(false);
   const [towerOpen, setTowerOpen] = useState(false);
+  const [userTagOpen, setUserTagOpen] = useState(false);
+  const [surveyTagOpen, setSurveyTagOpen] = useState(false);
   
   const handleFilterChange = (type, value) => {
-    let newFilters = {};
+    let newFilters = { 
+      geo: geoFilter, 
+      time: timeFilter, 
+      tower: towerFilter,
+      userTag: userTagFilter,
+      surveyTag: surveyTagFilter
+    };
     
     if (type === "geo") {
       setGeoFilter(value);
-      newFilters = { geo: value, time: timeFilter, tower: towerFilter };
+      newFilters.geo = value;
     } else if (type === "time") {
       setTimeFilter(value);
-      newFilters = { geo: geoFilter, time: value, tower: towerFilter };
+      newFilters.time = value;
     } else if (type === "tower") {
       setTowerFilter(value);
-      newFilters = { geo: geoFilter, time: timeFilter, tower: value };
+      newFilters.tower = value;
+    } else if (type === "userTag") {
+      setUserTagFilter(value);
+      newFilters.userTag = value;
+    } else if (type === "surveyTag") {
+      setSurveyTagFilter(value);
+      newFilters.surveyTag = value;
     }
     
     if (onFilterChange) {
       onFilterChange(newFilters);
     }
     
-    // Close the dropdown after selection
+    // Close all dropdowns after selection
     setGeoOpen(false);
     setTimeOpen(false);
     setTowerOpen(false);
+    setUserTagOpen(false);
+    setSurveyTagOpen(false);
   };
   
   const resetFilters = () => {
     setGeoFilter("All Geos");
     setTimeFilter("Last 12 Months");
     setTowerFilter("All Towers");
+    setUserTagFilter("All User Types");
+    setSurveyTagFilter("All Survey Tags");
     
     if (onFilterChange) {
-      onFilterChange({ geo: "All Geos", time: "Last 12 Months", tower: "All Towers" });
+      onFilterChange({ 
+        geo: "All Geos", 
+        time: "Last 12 Months", 
+        tower: "All Towers",
+        userTag: "All User Types",
+        surveyTag: "All Survey Tags"
+      });
     }
   };
   
@@ -140,6 +169,54 @@ const PageFilter = ({ onFilterChange }) => {
                   ))}
                 </ul>
               </div>
+              
+              {/* User Tag Filter Dropdown */}
+              <div className="dropdown me-2">
+                <button 
+                  className="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                  type="button" 
+                  onClick={() => setUserTagOpen(!userTagOpen)}
+                  aria-expanded={userTagOpen}
+                >
+                  User Type: {userTagFilter}
+                </button>
+                <ul className={`dropdown-menu ${userTagOpen ? 'show' : ''}`}>
+                  {userTagOptions.map(option => (
+                    <li key={option}>
+                      <button 
+                        className="dropdown-item" 
+                        onClick={() => handleFilterChange("userTag", option)}
+                      >
+                        {option}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              {/* Survey Tag Filter Dropdown */}
+              <div className="dropdown me-2">
+                <button 
+                  className="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                  type="button" 
+                  onClick={() => setSurveyTagOpen(!surveyTagOpen)}
+                  aria-expanded={surveyTagOpen}
+                >
+                  Survey Tag: {surveyTagFilter}
+                </button>
+                <ul className={`dropdown-menu ${surveyTagOpen ? 'show' : ''}`}>
+                  {surveyTagOptions.map(option => (
+                    <li key={option}>
+                      <button 
+                        className="dropdown-item" 
+                        onClick={() => handleFilterChange("surveyTag", option)}
+                      >
+                        {option}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
           <div 
@@ -172,6 +249,20 @@ const PageFilter = ({ onFilterChange }) => {
                 label={`Tower: ${towerFilter}`} 
                 value="tower"
                 onRemove={() => handleFilterChange("tower", "All Towers")} 
+              />
+            )}
+            {userTagFilter !== "All User Types" && (
+              <FilterPill 
+                label={`User Type: ${userTagFilter}`} 
+                value="userTag"
+                onRemove={() => handleFilterChange("userTag", "All User Types")} 
+              />
+            )}
+            {surveyTagFilter !== "All Survey Tags" && (
+              <FilterPill 
+                label={`Survey Tag: ${surveyTagFilter}`} 
+                value="surveyTag"
+                onRemove={() => handleFilterChange("surveyTag", "All Survey Tags")} 
               />
             )}
           </div>
