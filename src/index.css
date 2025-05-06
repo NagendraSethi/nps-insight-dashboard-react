@@ -86,14 +86,3 @@ body {
 .flex-wrap {
   flex-wrap: wrap;
 }
-
-/* Zoom controls */
-.zoom-controls button {
-  width: 32px;
-  height: 32px;
-}
-
-.zoom-controls button svg {
-  display: block;
-  margin: 0 auto;
-}

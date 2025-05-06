@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -89,58 +90,6 @@ const PageFilter = ({ onFilterChange }) => {
     }
   };
   
-  // Handler for dropdown toggle - closes other dropdowns when one is opened
-  const handleToggleDropdown = (dropdownName) => {
-    // Close all dropdowns first
-    setGeoOpen(false);
-    setTimeOpen(false);
-    setTowerOpen(false);
-    setUserTagOpen(false);
-    setSurveyTagOpen(false);
-    
-    // Then open the selected one
-    switch(dropdownName) {
-      case 'geo':
-        setGeoOpen(prev => !prev);
-        break;
-      case 'time':
-        setTimeOpen(prev => !prev);
-        break;
-      case 'tower':
-        setTowerOpen(prev => !prev);
-        break;
-      case 'userTag':
-        setUserTagOpen(prev => !prev);
-        break;
-      case 'surveyTag':
-        setSurveyTagOpen(prev => !prev);
-        break;
-      default:
-        break;
-    }
-  };
-  
-  // Close dropdowns when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = () => {
-      setGeoOpen(false);
-      setTimeOpen(false);
-      setTowerOpen(false);
-      setUserTagOpen(false);
-      setSurveyTagOpen(false);
-    };
-    
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
-  
-  // Prevent dropdown closing when clicking inside dropdown
-  const handleDropdownClick = (e) => {
-    e.stopPropagation();
-  };
-  
   return (
     <div className="card shadow-sm mb-4">
       <div className="card-body">
@@ -150,11 +99,11 @@ const PageFilter = ({ onFilterChange }) => {
             <div className="fw-medium text-dark">Page Filters</div>
             <div className="d-flex flex-wrap gap-2">
               {/* Geo Filter Dropdown */}
-              <div className="dropdown me-2" onClick={handleDropdownClick}>
+              <div className="dropdown me-2">
                 <button 
                   className="btn btn-sm btn-outline-secondary dropdown-toggle" 
                   type="button" 
-                  onClick={() => handleToggleDropdown('geo')}
+                  onClick={() => setGeoOpen(!geoOpen)}
                   aria-expanded={geoOpen}
                 >
                   Geo: {geoFilter}
@@ -163,7 +112,7 @@ const PageFilter = ({ onFilterChange }) => {
                   {geoOptions.map(option => (
                     <li key={option}>
                       <button 
-                        className={`dropdown-item ${option === geoFilter ? 'active' : ''}`}
+                        className="dropdown-item" 
                         onClick={() => handleFilterChange("geo", option)}
                       >
                         {option}
@@ -174,11 +123,11 @@ const PageFilter = ({ onFilterChange }) => {
               </div>
               
               {/* Time Filter Dropdown */}
-              <div className="dropdown me-2" onClick={handleDropdownClick}>
+              <div className="dropdown me-2">
                 <button 
                   className="btn btn-sm btn-outline-secondary dropdown-toggle" 
                   type="button" 
-                  onClick={() => handleToggleDropdown('time')}
+                  onClick={() => setTimeOpen(!timeOpen)}
                   aria-expanded={timeOpen}
                 >
                   Time: {timeFilter}
@@ -187,7 +136,7 @@ const PageFilter = ({ onFilterChange }) => {
                   {timeOptions.map(option => (
                     <li key={option}>
                       <button 
-                        className={`dropdown-item ${option === timeFilter ? 'active' : ''}`}
+                        className="dropdown-item" 
                         onClick={() => handleFilterChange("time", option)}
                       >
                         {option}
@@ -198,11 +147,11 @@ const PageFilter = ({ onFilterChange }) => {
               </div>
               
               {/* Tower Filter Dropdown */}
-              <div className="dropdown me-2" onClick={handleDropdownClick}>
+              <div className="dropdown me-2">
                 <button 
                   className="btn btn-sm btn-outline-secondary dropdown-toggle" 
                   type="button" 
-                  onClick={() => handleToggleDropdown('tower')}
+                  onClick={() => setTowerOpen(!towerOpen)}
                   aria-expanded={towerOpen}
                 >
                   Tower: {towerFilter}
@@ -211,7 +160,7 @@ const PageFilter = ({ onFilterChange }) => {
                   {towerOptions.map(option => (
                     <li key={option}>
                       <button 
-                        className={`dropdown-item ${option === towerFilter ? 'active' : ''}`}
+                        className="dropdown-item" 
                         onClick={() => handleFilterChange("tower", option)}
                       >
                         {option}
@@ -222,11 +171,11 @@ const PageFilter = ({ onFilterChange }) => {
               </div>
               
               {/* User Tag Filter Dropdown */}
-              <div className="dropdown me-2" onClick={handleDropdownClick}>
+              <div className="dropdown me-2">
                 <button 
                   className="btn btn-sm btn-outline-secondary dropdown-toggle" 
                   type="button" 
-                  onClick={() => handleToggleDropdown('userTag')}
+                  onClick={() => setUserTagOpen(!userTagOpen)}
                   aria-expanded={userTagOpen}
                 >
                   User Type: {userTagFilter}
@@ -235,7 +184,7 @@ const PageFilter = ({ onFilterChange }) => {
                   {userTagOptions.map(option => (
                     <li key={option}>
                       <button 
-                        className={`dropdown-item ${option === userTagFilter ? 'active' : ''}`}
+                        className="dropdown-item" 
                         onClick={() => handleFilterChange("userTag", option)}
                       >
                         {option}
@@ -246,11 +195,11 @@ const PageFilter = ({ onFilterChange }) => {
               </div>
               
               {/* Survey Tag Filter Dropdown */}
-              <div className="dropdown me-2" onClick={handleDropdownClick}>
+              <div className="dropdown me-2">
                 <button 
                   className="btn btn-sm btn-outline-secondary dropdown-toggle" 
                   type="button" 
-                  onClick={() => handleToggleDropdown('surveyTag')}
+                  onClick={() => setSurveyTagOpen(!surveyTagOpen)}
                   aria-expanded={surveyTagOpen}
                 >
                   Survey Tag: {surveyTagFilter}
@@ -259,7 +208,7 @@ const PageFilter = ({ onFilterChange }) => {
                   {surveyTagOptions.map(option => (
                     <li key={option}>
                       <button 
-                        className={`dropdown-item ${option === surveyTagFilter ? 'active' : ''}`}
+                        className="dropdown-item" 
                         onClick={() => handleFilterChange("surveyTag", option)}
                       >
                         {option}
