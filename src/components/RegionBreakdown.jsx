@@ -1,21 +1,30 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const RegionBar = ({ region, value, total, color }) => {
-  const percentage = (value / total) * 100;
+  const [percentage, setPercentage] = useState(0);
+  
+  useEffect(() => {
+    // Delay the animation slightly for a staggered effect
+    const timer = setTimeout(() => {
+      setPercentage((value / total) * 100);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [value, total]);
+
   return (
-    <div className="mb-3">
+    <div className="mb-3 fade-in">
       <div className="d-flex justify-content-between small mb-1">
         <span className="fw-medium">{region}</span>
         <span>{value}</span>
       </div>
       <div className="bg-light rounded overflow-hidden" style={{ height: '8px' }}>
         <div 
-          className="rounded h-100 transition-all"
+          className="rounded h-100 region-bar-animate"
           style={{ 
             width: `${percentage}%`,
             backgroundColor: color,
-            transition: 'width 0.5s ease-out'
           }}
         ></div>
       </div>
@@ -33,18 +42,20 @@ const RegionBreakdown = ({ data, title, total }) => {
   };
 
   return (
-    <div className="card shadow h-100">
+    <div className="card shadow h-100 card-animate">
       <div className="card-body">
-        <h6 className="mb-3 text-muted small fw-medium">{title}</h6>
-        {Object.keys(data).map(region => (
-          <RegionBar 
-            key={region}
-            region={region} 
-            value={data[region]} 
-            total={total} 
-            color={colors[region]}
-          />
-        ))}
+        <h6 className="mb-3 text-muted small fw-medium fade-in">{title}</h6>
+        <div className="staggered-fade-in">
+          {Object.keys(data).map(region => (
+            <RegionBar 
+              key={region}
+              region={region} 
+              value={data[region]} 
+              total={total} 
+              color={colors[region]}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

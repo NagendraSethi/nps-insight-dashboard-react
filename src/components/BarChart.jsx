@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart as ReBarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
@@ -7,7 +7,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white p-3 border shadow-lg rounded">
+      <div className="bg-white p-3 border shadow-lg rounded animate-fade-in">
         <p className="fw-medium">{`${payload[0].name}: ${payload[0].value}`}</p>
       </div>
     );
@@ -16,24 +16,37 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const BarChart = ({ data, title, infoText }) => {
+  const [animatedData, setAnimatedData] = useState([]);
+  
+  // Animate data loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimatedData(data);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [data]);
+
   return (
-    <div className="card shadow h-100">
+    <div className="card shadow h-100 card-animate">
       <div className="card-body">
         <div className="d-flex align-items-center mb-3">
-          <h5 className="card-title fs-6 fw-medium text-dark">{title}</h5>
+          <h5 className="card-title fs-6 fw-medium text-dark fade-in">{title}</h5>
           <FontAwesomeIcon 
             icon={faInfoCircle} 
             size="sm" 
-            className="text-secondary ms-2 cursor-help" 
+            className="text-secondary ms-2 cursor-help fade-in" 
             title={infoText} 
           />
         </div>
-        <div style={{ height: 250 }}>
+        <div style={{ height: 250 }} className="fade-in">
           <ResponsiveContainer width="100%" height="100%">
             <ReBarChart 
-              data={data} 
+              data={animatedData} 
               margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
               barSize={40}
+              animationDuration={1000}
+              animationEasing="ease-out"
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.2} />
               <XAxis 
@@ -53,6 +66,9 @@ const BarChart = ({ data, title, infoText }) => {
                 dataKey="value" 
                 fill="#6366f1" 
                 radius={[4, 4, 0, 0]}
+                animationBegin={100}
+                animationDuration={1500}
+                isAnimationActive={true}
               />
             </ReBarChart>
           </ResponsiveContainer>

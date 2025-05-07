@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { PieChart as ReChartPie, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
@@ -7,7 +7,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white p-3 border shadow rounded">
+      <div className="bg-white p-3 border shadow rounded animate-fade-in">
         <p className="fw-medium">{`${payload[0].name}: ${payload[0].value}`}</p>
       </div>
     );
@@ -17,16 +17,20 @@ const CustomTooltip = ({ active, payload }) => {
 
 const PieChart = ({ data, title, infoText, colors }) => {
   const totalCount = data.reduce((sum, item) => sum + item.value, 0);
+  const [animate, setAnimate] = useState(true);
+  
+  // Disable animation after it plays once
+  setTimeout(() => setAnimate(false), 1500);
 
   return (
-    <div className="card shadow h-100">
+    <div className="card shadow h-100 card-animate">
       <div className="card-body">
         <div className="d-flex align-items-center mb-3">
-          <h5 className="card-title fs-6 fw-medium text-dark">{title}</h5>
+          <h5 className="card-title fs-6 fw-medium text-dark fade-in">{title}</h5>
           <FontAwesomeIcon 
             icon={faInfoCircle} 
             size="sm" 
-            className="text-secondary ms-2 cursor-help" 
+            className="text-secondary ms-2 cursor-help fade-in" 
             title={infoText} 
           />
         </div>
@@ -42,6 +46,10 @@ const PieChart = ({ data, title, infoText, colors }) => {
                 innerRadius={55}
                 dataKey="value"
                 paddingAngle={2}
+                animationBegin={100}
+                animationDuration={1000}
+                animationEasing="ease-out"
+                isAnimationActive={animate}
               >
                 {data.map((entry, index) => (
                   <Cell 
@@ -52,7 +60,7 @@ const PieChart = ({ data, title, infoText, colors }) => {
                   />
                 ))}
               </Pie>
-              <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle">
+              <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="animate-count">
                 <tspan x="50%" dy="-5" className="fs-4 fw-bold">{totalCount}</tspan>
                 <tspan x="50%" dy="20" className="small text-secondary">Total</tspan>
               </text>
@@ -61,11 +69,10 @@ const PieChart = ({ data, title, infoText, colors }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="d-flex flex-wrap justify-content-center mt-2 gap-2">
+        <div className="d-flex flex-wrap justify-content-center mt-2 gap-2 staggered-fade-in">
           {data.map((entry, index) => (
             <div key={index} className="d-flex align-items-center mx-2 my-1">
               <div 
-                style={{ backgroundColor: colors[index % colors.length] }} 
                 className="me-2 rounded-1"
                 style={{ width: '12px', height: '12px', backgroundColor: colors[index % colors.length] }}
               ></div>

@@ -1,4 +1,5 @@
 
+
 /* Base styles */
 body {
   background-color: #f8f9fa;
@@ -39,6 +40,103 @@ body {
 .fade-in {
   animation: fadeIn 0.5s ease-out forwards;
 }
+
+/* Dashboard animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.staggered-fade-in > * {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.staggered-fade-in > *:nth-child(1) { animation-delay: 0.1s; }
+.staggered-fade-in > *:nth-child(2) { animation-delay: 0.2s; }
+.staggered-fade-in > *:nth-child(3) { animation-delay: 0.3s; }
+.staggered-fade-in > *:nth-child(4) { animation-delay: 0.4s; }
+.staggered-fade-in > *:nth-child(5) { animation-delay: 0.5s; }
+.staggered-fade-in > *:nth-child(6) { animation-delay: 0.6s; }
+.staggered-fade-in > *:nth-child(7) { animation-delay: 0.7s; }
+.staggered-fade-in > *:nth-child(8) { animation-delay: 0.8s; }
+.staggered-fade-in > *:nth-child(9) { animation-delay: 0.9s; }
+
+/* Card entrance animation */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.card-animate {
+  animation: cardEnter 0.4s ease-out forwards;
+  transform-origin: center;
+}
+
+/* Pie chart rotation animation */
+@keyframes pieRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pie-animate {
+  animation: pieRotate 30s linear infinite;
+}
+
+/* Progress bar loading animation */
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+}
+
+.animate-progress {
+  animation: progressFill 1s ease-out forwards;
+}
+
+/* Table hover animation */
+.table-hover-row:hover {
+  transform: translateX(5px);
+  transition: transform 0.2s ease;
+  background-color: rgba(0,0,0,0.03);
+}
+
+/* Table rows */
+@keyframes tableRowFade {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.table-animate > tr {
+  animation: tableRowFade 0.3s ease-out forwards;
+}
+
+/* Table row staggered animation */
+.table-animate > tr:nth-child(1) { animation-delay: 0.05s; }
+.table-animate > tr:nth-child(2) { animation-delay: 0.1s; }
+.table-animate > tr:nth-child(3) { animation-delay: 0.15s; }
+.table-animate > tr:nth-child(4) { animation-delay: 0.2s; }
+.table-animate > tr:nth-child(5) { animation-delay: 0.25s; }
+.table-animate > tr:nth-child(6) { animation-delay: 0.3s; }
+.table-animate > tr:nth-child(7) { animation-delay: 0.35s; }
+.table-animate > tr:nth-child(8) { animation-delay: 0.4s; }
+.table-animate > tr:nth-child(9) { animation-delay: 0.45s; }
+.table-animate > tr:nth-child(10) { animation-delay: 0.5s; }
 
 /* Table styles */
 .table-container {
@@ -133,3 +231,35 @@ body {
 .overflow-hidden {
   overflow: hidden;
 }
+
+/* Number counter animation */
+@keyframes countUp {
+  from {
+    opacity: 0.5;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-count {
+  animation: countUp 0.5s ease-out forwards;
+}
+
+/* Metric card pulse effect on hover */
+.metric-card-hover:hover {
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+
+.metric-card-hover {
+  transition: all 0.3s ease;
+}
+
+/* Region bar animation */
+.region-bar-animate {
+  transition: width 1s ease-out;
+}
+

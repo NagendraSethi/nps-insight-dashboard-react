@@ -9,7 +9,7 @@ const ProgressBar = ({ segments }) => {
       {segments.map((segment, index) => (
         <div 
           key={index} 
-          className={`progress-bar ${segment.class}`}
+          className={`progress-bar ${segment.class} animate-progress`}
           style={{ width: `${segment.percentage}%` }}
         />
       ))}
@@ -25,11 +25,11 @@ const DataTable = ({ title, columns, data, showProgressBar = false }) => {
   };
   
   return (
-    <div className={`card shadow h-100 ${expanded ? 'expanded-card' : ''}`} 
+    <div className={`card shadow h-100 ${expanded ? 'expanded-card' : ''} card-animate`}
          style={expanded ? {position: 'fixed', top: '10%', left: '5%', right: '5%', bottom: '10%', zIndex: 1050, maxWidth: '90%', maxHeight: '80vh'} : {}}>
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center fade-in">
             <h5 className="card-title fs-6 fw-medium text-dark mb-0">{title}</h5>
             <FontAwesomeIcon 
               icon={faInfoCircle} 
@@ -40,7 +40,7 @@ const DataTable = ({ title, columns, data, showProgressBar = false }) => {
           <FontAwesomeIcon 
             icon={expanded ? faCompress : faExpand} 
             size="sm" 
-            className="text-secondary cursor-pointer" 
+            className="text-secondary cursor-pointer fade-in" 
             onClick={toggleExpand}
           />
         </div>
@@ -59,9 +59,9 @@ const DataTable = ({ title, columns, data, showProgressBar = false }) => {
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="table-animate">
               {data.map((row, rowIndex) => (
-                <tr key={rowIndex} className="border-bottom">
+                <tr key={rowIndex} className="border-bottom table-hover-row">
                   {columns.map((column, colIndex) => {
                     if (column.key === 'progress') {
                       return (
@@ -85,7 +85,7 @@ const DataTable = ({ title, columns, data, showProgressBar = false }) => {
           </table>
         </div>
         {data.length === 0 && (
-          <div className="text-center py-4 text-secondary">No data available</div>
+          <div className="text-center py-4 text-secondary fade-in">No data available</div>
         )}
       </div>
     </div>
