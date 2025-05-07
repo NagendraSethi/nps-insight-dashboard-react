@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faExpand, faCompress } from '@fortawesome/free-solid-svg-icons';
-import MetaInfoHoverCard from './MetaInfoHoverCard';
 
 const ProgressBar = ({ segments }) => {
   return (
@@ -18,43 +17,26 @@ const ProgressBar = ({ segments }) => {
   );
 };
 
-const DataTable = ({ title, columns, data, showProgressBar = false, metaInfo }) => {
+const DataTable = ({ title, columns, data, showProgressBar = false }) => {
   const [expanded, setExpanded] = useState(false);
   
   const toggleExpand = () => {
     setExpanded(!expanded);
   };
   
-  const cardTitle = (
-    <div className="d-flex align-items-center fade-in">
-      <h5 className="card-title fs-6 fw-medium text-dark mb-0">
-        {metaInfo ? (
-          <MetaInfoHoverCard
-            title={metaInfo.title || title}
-            description={metaInfo.description || ""}
-          >
-            {title}
-          </MetaInfoHoverCard>
-        ) : (
-          <>
-            {title}
-            <FontAwesomeIcon 
-              icon={faInfoCircle} 
-              size="sm" 
-              className="text-secondary ms-2" 
-            />
-          </>
-        )}
-      </h5>
-    </div>
-  );
-  
   return (
     <div className={`card shadow h-100 ${expanded ? 'expanded-card' : ''} card-animate`}
          style={expanded ? {position: 'fixed', top: '10%', left: '5%', right: '5%', bottom: '10%', zIndex: 1050, maxWidth: '90%', maxHeight: '80vh'} : {}}>
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          {cardTitle}
+          <div className="d-flex align-items-center fade-in">
+            <h5 className="card-title fs-6 fw-medium text-dark mb-0">{title}</h5>
+            <FontAwesomeIcon 
+              icon={faInfoCircle} 
+              size="sm" 
+              className="text-secondary ms-2" 
+            />
+          </div>
           <FontAwesomeIcon 
             icon={expanded ? faCompress : faExpand} 
             size="sm" 
