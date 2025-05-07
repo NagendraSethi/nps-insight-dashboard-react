@@ -1,0 +1,62 @@
+
+/* Card hover effects */
+.card-hover-effect {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Card entrance animation */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.card-animate {
+  animation: cardEnter 0.4s ease-out forwards;
+  transform-origin: center;
+}
+
+/* Metric card pulse effect on hover */
+.metric-card-hover:hover {
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+
+.metric-card-hover {
+  transition: all 0.3s ease;
+}
+
+/* Pulse glow animation for cards */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(66, 153, 225, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(66, 153, 225, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(66, 153, 225, 0.5);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s infinite;
+}
+
+/* Expanded card modal-like styling */
+.expanded-card {
+  background-color: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease;
+  z-index: 1050;
+}
