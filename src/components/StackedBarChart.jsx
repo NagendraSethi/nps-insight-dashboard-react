@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faExpand, faCompress } from '@fortawesome/free-solid-svg-icons';
+import MetaInfoHoverCard from './MetaInfoHoverCard';
 
 const StackedBar = ({ promoters, passives, detractors, total, delay }) => {
   const [animatedPromoters, setAnimatedPromoters] = useState(0);
@@ -36,22 +37,40 @@ const StackedBar = ({ promoters, passives, detractors, total, delay }) => {
   );
 };
 
-const StackedBarChart = ({ data, title }) => {
+const StackedBarChart = ({ data, title, metaInfo }) => {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
   
+  const cardTitle = (
+    <div className="d-flex align-items-center fade-in">
+      <h5 className="card-title fs-6 fw-medium text-dark mb-0">
+        {metaInfo ? (
+          <MetaInfoHoverCard
+            title={metaInfo.title || title}
+            description={metaInfo.description || ""}
+            position="top"
+          >
+            {title}
+          </MetaInfoHoverCard>
+        ) : (
+          <>
+            {title}
+            <FontAwesomeIcon icon={faInfoCircle} size="sm" className="text-secondary ms-2" />
+          </>
+        )}
+      </h5>
+    </div>
+  );
+  
   return (
     <div className={`card shadow h-100 ${expanded ? 'expanded-card' : ''} card-animate`}
          style={expanded ? {position: 'fixed', top: '10%', left: '5%', right: '5%', bottom: '10%', zIndex: 1050, maxWidth: '90%', maxHeight: '80vh'} : {}}>
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <div className="d-flex align-items-center fade-in">
-            <h5 className="card-title fs-6 fw-medium text-dark mb-0">{title}</h5>
-            <FontAwesomeIcon icon={faInfoCircle} size="sm" className="text-secondary ms-2" />
-          </div>
+          {cardTitle}
           <FontAwesomeIcon 
             icon={expanded ? faCompress : faExpand} 
             size="sm" 

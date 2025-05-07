@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
+import MetaInfoHoverCard from './MetaInfoHoverCard';
 
-const MetricCard = ({ title, value, subtitle, color = "#0f1b35" }) => {
+const MetricCard = ({ title, value, subtitle, color = "#0f1b35", metaInfo }) => {
   const [displayValue, setDisplayValue] = useState(0);
   const [animationComplete, setAnimationComplete] = useState(false);
   
@@ -40,10 +41,21 @@ const MetricCard = ({ title, value, subtitle, color = "#0f1b35" }) => {
     return () => clearInterval(timer);
   }, [value]);
 
+  const cardTitle = metaInfo ? (
+    <MetaInfoHoverCard 
+      title={metaInfo.title || title} 
+      description={metaInfo.description || ""}
+    >
+      {title}
+    </MetaInfoHoverCard>
+  ) : (
+    title
+  );
+
   return (
     <div className="card h-100 shadow metric-card-hover card-animate">
       <div className="card-body d-flex flex-column" style={{ backgroundColor: color }}>
-        <div className="text-light fw-medium small fade-in">{title}</div>
+        <div className="text-light fw-medium small fade-in">{cardTitle}</div>
         <div className={`fs-1 fw-bold text-white mt-2 ${animationComplete ? 'animate-count' : ''}`}>
           {typeof displayValue === 'number' ? displayValue.toLocaleString() : displayValue}
         </div>

@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import MetaInfoHoverCard from './MetaInfoHoverCard';
 
 const RegionBar = ({ region, value, total, color }) => {
   const [percentage, setPercentage] = useState(0);
@@ -32,7 +33,7 @@ const RegionBar = ({ region, value, total, color }) => {
   );
 };
 
-const RegionBreakdown = ({ data, title, total }) => {
+const RegionBreakdown = ({ data, title, total, metaInfo }) => {
   // Colors for different regions
   const colors = {
     NA: "#3B82F6", // Blue
@@ -41,10 +42,21 @@ const RegionBreakdown = ({ data, title, total }) => {
     LATAM: "#EF4444" // Red
   };
 
+  const cardTitle = metaInfo ? (
+    <MetaInfoHoverCard 
+      title={metaInfo.title || title}
+      description={metaInfo.description || ""}
+    >
+      {title}
+    </MetaInfoHoverCard>
+  ) : (
+    title
+  );
+
   return (
     <div className="card shadow h-100 card-animate">
       <div className="card-body">
-        <h6 className="mb-3 text-muted small fw-medium fade-in">{title}</h6>
+        <h6 className="mb-3 text-muted small fw-medium fade-in">{cardTitle}</h6>
         <div className="staggered-fade-in">
           {Object.keys(data).map(region => (
             <RegionBar 
