@@ -9,7 +9,7 @@ const RegionBar = ({ region, value, total, color }) => {
         <span className="fw-medium">{region}</span>
         <span>{value}</span>
       </div>
-      <div className="bg-light rounded" style={{ height: '8px' }}>
+      <div className="bg-light rounded overflow-hidden" style={{ height: '8px' }}>
         <div 
           className="rounded h-100 transition-all"
           style={{ 

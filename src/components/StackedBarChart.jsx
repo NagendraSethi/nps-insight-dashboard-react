@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faExpand } from '@fortawesome/free-solid-svg-icons';
 
 const StackedBar = ({ promoters, passives, detractors, total }) => {
   const promoterPercent = (promoters / total) * 100;
@@ -27,15 +27,28 @@ const StackedBar = ({ promoters, passives, detractors, total }) => {
 };
 
 const StackedBarChart = ({ data, title }) => {
+  const handleExpandClick = () => {
+    // Toggle a class or state to expand the chart to full screen
+    console.log("Expand chart clicked");
+  };
+  
   return (
     <div className="card shadow h-100">
       <div className="card-body">
-        <div className="d-flex align-items-center mb-3">
-          <h5 className="card-title fs-6 fw-medium text-dark">{title}</h5>
-          <FontAwesomeIcon icon={faInfoCircle} size="sm" className="text-secondary ms-2" />
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <div className="d-flex align-items-center">
+            <h5 className="card-title fs-6 fw-medium text-dark mb-0">{title}</h5>
+            <FontAwesomeIcon icon={faInfoCircle} size="sm" className="text-secondary ms-2" />
+          </div>
+          <FontAwesomeIcon 
+            icon={faExpand} 
+            size="sm" 
+            className="text-secondary cursor-pointer" 
+            onClick={handleExpandClick}
+          />
         </div>
         
-        <div className="mt-4">
+        <div className="chart-scroll-container" style={{ maxHeight: '300px', overflowY: 'auto' }}>
           {data.map((item, index) => {
             const total = item.promoters + item.passives + item.detractors;
             const npsScore = ((item.promoters - item.detractors) / total * 100).toFixed(1);

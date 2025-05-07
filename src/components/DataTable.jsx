@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle, faExpand } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faExpand, faCompress } from '@fortawesome/free-solid-svg-icons';
 
 const ProgressBar = ({ segments }) => {
   return (
@@ -18,8 +18,15 @@ const ProgressBar = ({ segments }) => {
 };
 
 const DataTable = ({ title, columns, data, showProgressBar = false }) => {
+  const [expanded, setExpanded] = useState(false);
+  
+  const toggleExpand = () => {
+    setExpanded(!expanded);
+  };
+  
   return (
-    <div className="card shadow h-100">
+    <div className={`card shadow h-100 ${expanded ? 'expanded-card' : ''}`} 
+         style={expanded ? {position: 'fixed', top: '10%', left: '5%', right: '5%', bottom: '10%', zIndex: 1050, maxWidth: '90%', maxHeight: '80vh'} : {}}>
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div className="d-flex align-items-center">
@@ -31,20 +38,21 @@ const DataTable = ({ title, columns, data, showProgressBar = false }) => {
             />
           </div>
           <FontAwesomeIcon 
-            icon={faExpand} 
+            icon={expanded ? faCompress : faExpand} 
             size="sm" 
             className="text-secondary cursor-pointer" 
+            onClick={toggleExpand}
           />
         </div>
         
-        <div className="table-responsive border rounded">
+        <div className="table-responsive border rounded" style={expanded ? {maxHeight: 'calc(100% - 70px)'} : {maxHeight: '300px'}}>
           <table className="table table-hover mb-0">
             <thead className="table-light">
               <tr>
                 {columns.map((column, index) => (
                   <th 
                     key={index} 
-                    className="py-2 small fw-medium text-secondary text-start"
+                    className="py-2 small fw-medium text-secondary text-start position-sticky bg-light top-0"
                   >
                     {column.header}
                   </th>

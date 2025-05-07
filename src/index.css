@@ -86,3 +86,50 @@ body {
 .flex-wrap {
   flex-wrap: wrap;
 }
+
+/* Scrollable container for charts */
+.chart-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.chart-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chart-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 20px;
+}
+
+/* Expanded card modal-like styling */
+.expanded-card {
+  background-color: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease;
+  z-index: 1050;
+}
+
+/* Fix for sticky header in tables */
+.table-responsive {
+  position: relative;
+  overflow-y: auto;
+}
+
+.position-sticky {
+  position: sticky;
+  z-index: 1;
+}
+
+.top-0 {
+  top: 0;
+}
+
+/* Ensure progress bars stay within container */
+.overflow-hidden {
+  overflow: hidden;
+}
