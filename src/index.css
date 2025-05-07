@@ -1,5 +1,4 @@
 
-
 /* Base styles */
 body {
   background-color: #f8f9fa;
@@ -263,3 +262,24 @@ body {
   transition: width 1s ease-out;
 }
 
+/* Color transition animation */
+.color-transition {
+  transition: background-color 1.5s ease;
+}
+
+/* Pulse glow animation for cards */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(66, 153, 225, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(66, 153, 225, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(66, 153, 225, 0.5);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s infinite;
+}
