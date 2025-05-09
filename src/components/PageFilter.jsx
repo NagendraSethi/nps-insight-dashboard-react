@@ -1,275 +1,105 @@
+import React, { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons'
+import SelectAsyncPaginate from '../../../Utilities/selectPaginate'
+const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
+  const [selectedSurveyTags, setSelectedSurveyTags] = useState(
+    JSON.parse(localStorage.getItem('selectedSurveyTags')) || []
+  )
+  const [selectedUserTags, setSelectedUserTags] = useState(
+    JSON.parse(localStorage.getItem('selectedUserTags')) || []
+  )
 
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons';
+  useEffect(() => {
+    localStorage.setItem(
+      'selectedSurveyTags',
+      JSON.stringify(selectedSurveyTags)
+    )
+    localStorage.setItem('selectedUserTags', JSON.stringify(selectedUserTags))
+  }, [selectedSurveyTags, selectedUserTags])
 
-const FilterPill = ({ label, onRemove, value }) => (
-  <div className="badge bg-light text-dark d-inline-flex align-items-center me-2 py-2 px-3">
-    {label}
-    <FontAwesomeIcon 
-      icon={faTimes} 
-      className="ms-2 small cursor-pointer" 
-      onClick={() => onRemove(value)}
-    />
-  </div>
-);
+  const surveyOptions = surveyTags.map((tag) => ({ label: tag, value: tag }))
+  const userOptions = userTags.map((tag) => ({ label: tag, value: tag }))
 
-const PageFilter = ({ onFilterChange }) => {
-  const [geoFilter, setGeoFilter] = useState("All Geos");
-  const [timeFilter, setTimeFilter] = useState("Last 12 Months");
-  const [towerFilter, setTowerFilter] = useState("All Towers");
-  const [userTagFilter, setUserTagFilter] = useState("All User Types");
-  const [surveyTagFilter, setSurveyTagFilter] = useState("All Survey Tags");
-  
-  const [geoOptions] = useState(["All Geos", "NA", "EMEA", "APAC", "LATAM"]);
-  const [timeOptions] = useState(["Last 12 Months", "Last 6 Months", "Last 3 Months", "Last Month"]);
-  const [towerOptions] = useState(["All Towers", "CHI", "LYC", "PTP", "EMED", "LIVE NA", "DTR", "ECM", "CRE", "SCM"]);
-  const [userTagOptions] = useState(["All User Types", "Manager", "End User", "Senior Stakeholder", "Other"]);
-  const [surveyTagOptions] = useState(["All Survey Tags", "Strategic", "Operational", "Technical", "Project-based"]);
-  
-  // Track if dropdown menus are open
-  const [geoOpen, setGeoOpen] = useState(false);
-  const [timeOpen, setTimeOpen] = useState(false);
-  const [towerOpen, setTowerOpen] = useState(false);
-  const [userTagOpen, setUserTagOpen] = useState(false);
-  const [surveyTagOpen, setSurveyTagOpen] = useState(false);
-  
-  const handleFilterChange = (type, value) => {
-    let newFilters = { 
-      geo: geoFilter, 
-      time: timeFilter, 
-      tower: towerFilter,
-      userTag: userTagFilter,
-      surveyTag: surveyTagFilter
-    };
-    
-    if (type === "geo") {
-      setGeoFilter(value);
-      newFilters.geo = value;
-    } else if (type === "time") {
-      setTimeFilter(value);
-      newFilters.time = value;
-    } else if (type === "tower") {
-      setTowerFilter(value);
-      newFilters.tower = value;
-    } else if (type === "userTag") {
-      setUserTagFilter(value);
-      newFilters.userTag = value;
-    } else if (type === "surveyTag") {
-      setSurveyTagFilter(value);
-      newFilters.surveyTag = value;
-    }
-    
-    if (onFilterChange) {
-      onFilterChange(newFilters);
-    }
-    
-    // Close all dropdowns after selection
-    setGeoOpen(false);
-    setTimeOpen(false);
-    setTowerOpen(false);
-    setUserTagOpen(false);
-    setSurveyTagOpen(false);
-  };
-  
-  const resetFilters = () => {
-    setGeoFilter("All Geos");
-    setTimeFilter("Last 12 Months");
-    setTowerFilter("All Towers");
-    setUserTagFilter("All User Types");
-    setSurveyTagFilter("All Survey Tags");
-    
-    if (onFilterChange) {
-      onFilterChange({ 
-        geo: "All Geos", 
-        time: "Last 12 Months", 
-        tower: "All Towers",
-        userTag: "All User Types",
-        surveyTag: "All Survey Tags"
-      });
-    }
-  };
-  
+  const handleReset = () => {
+    setSelectedSurveyTags([])
+    setSelectedUserTags([])
+    setFilterParams({})
+  }
+
+  const applyFilters = () => {
+    const tagFilters = [
+      ...selectedSurveyTags.map((tag) => ({
+        name: 'survey_tags',
+        value: tag.value,
+      })),
+      ...selectedUserTags.map((tag) => ({
+        name: 'user_tags',
+        value: tag.value,
+      })),
+    ]
+    setFilterParams(tagFilters)
+  }
+
   return (
     <div className="card shadow-sm mb-4">
       <div className="card-body">
         <div className="d-flex flex-wrap align-items-center justify-content-between">
-          <div className="d-flex align-items-center gap-3 mb-2 mb-md-0">
-            <FontAwesomeIcon icon={faFilter} className="text-secondary" />
-            <div className="fw-medium text-dark">Page Filters</div>
-            <div className="d-flex flex-wrap gap-2">
-              {/* Geo Filter Dropdown */}
-              <div className="dropdown me-2">
-                <button 
-                  className="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                  type="button" 
-                  onClick={() => setGeoOpen(!geoOpen)}
-                  aria-expanded={geoOpen}
-                >
-                  Geo: {geoFilter}
-                </button>
-                <ul className={`dropdown-menu ${geoOpen ? 'show' : ''}`}>
-                  {geoOptions.map(option => (
-                    <li key={option}>
-                      <button 
-                        className="dropdown-item" 
-                        onClick={() => handleFilterChange("geo", option)}
-                      >
-                        {option}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              {/* Time Filter Dropdown */}
-              <div className="dropdown me-2">
-                <button 
-                  className="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                  type="button" 
-                  onClick={() => setTimeOpen(!timeOpen)}
-                  aria-expanded={timeOpen}
-                >
-                  Time: {timeFilter}
-                </button>
-                <ul className={`dropdown-menu ${timeOpen ? 'show' : ''}`}>
-                  {timeOptions.map(option => (
-                    <li key={option}>
-                      <button 
-                        className="dropdown-item" 
-                        onClick={() => handleFilterChange("time", option)}
-                      >
-                        {option}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              {/* Tower Filter Dropdown */}
-              <div className="dropdown me-2">
-                <button 
-                  className="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                  type="button" 
-                  onClick={() => setTowerOpen(!towerOpen)}
-                  aria-expanded={towerOpen}
-                >
-                  Tower: {towerFilter}
-                </button>
-                <ul className={`dropdown-menu ${towerOpen ? 'show' : ''}`}>
-                  {towerOptions.map(option => (
-                    <li key={option}>
-                      <button 
-                        className="dropdown-item" 
-                        onClick={() => handleFilterChange("tower", option)}
-                      >
-                        {option}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              {/* User Tag Filter Dropdown */}
-              <div className="dropdown me-2">
-                <button 
-                  className="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                  type="button" 
-                  onClick={() => setUserTagOpen(!userTagOpen)}
-                  aria-expanded={userTagOpen}
-                >
-                  User Type: {userTagFilter}
-                </button>
-                <ul className={`dropdown-menu ${userTagOpen ? 'show' : ''}`}>
-                  {userTagOptions.map(option => (
-                    <li key={option}>
-                      <button 
-                        className="dropdown-item" 
-                        onClick={() => handleFilterChange("userTag", option)}
-                      >
-                        {option}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              {/* Survey Tag Filter Dropdown */}
-              <div className="dropdown me-2">
-                <button 
-                  className="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                  type="button" 
-                  onClick={() => setSurveyTagOpen(!surveyTagOpen)}
-                  aria-expanded={surveyTagOpen}
-                >
-                  Survey Tag: {surveyTagFilter}
-                </button>
-                <ul className={`dropdown-menu ${surveyTagOpen ? 'show' : ''}`}>
-                  {surveyTagOptions.map(option => (
-                    <li key={option}>
-                      <button 
-                        className="dropdown-item" 
-                        onClick={() => handleFilterChange("surveyTag", option)}
-                      >
-                        {option}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <div className="d-flex flex-column flex-md-row gap-3 mb-3">
+            <div className="d-flex align-items-center gap-2">
+              <FontAwesomeIcon icon={faFilter} className="text-secondary" />
+              {/* <div className="fw-medium text-dark">Page Filters</div> */}
+            </div>
+            <SelectAsyncPaginate
+              width="100%"
+              isSearchable={true}
+              placeholder={'Select Survey Tags'}
+              loadOptions={surveyOptions}
+              onChange={setSelectedSurveyTags}
+              tagTypes={'surveyTags'}
+            />
+            <SelectAsyncPaginate
+              width="100%"
+              isSearchable={true}
+              placeholder={'Select User Tags'}
+              loadOptions={userOptions}
+              onChange={setSelectedUserTags}
+              tagTypes={'userTag'}
+            />
+            <div
+              className="d-flex align-items-center text-primary cursor-pointer"
+              role="button"
+              tabIndex="0"
+              onClick={applyFilters}
+              style={{width: '250px'}}
+            >
+              <span className="small">Apply filters</span>
             </div>
           </div>
-          <div 
-            className="d-flex align-items-center text-primary cursor-pointer" 
-            onClick={resetFilters}
+
+          <div
+            className="d-flex align-items-center text-danger cursor-pointer"
+            role="button"
+            tabIndex="0"
+            onClick={handleReset}
           >
             <FontAwesomeIcon icon={faTimes} size="sm" className="me-1" />
             <span className="small">Reset filters</span>
           </div>
         </div>
-        <div className="mt-2">
-          <small className="text-muted">Active filters:</small>
-          <div className="d-flex flex-wrap mt-2">
-            {geoFilter !== "All Geos" && (
-              <FilterPill 
-                label={`Geo: ${geoFilter}`} 
-                value="geo"
-                onRemove={() => handleFilterChange("geo", "All Geos")} 
-              />
-            )}
-            {timeFilter !== "Last 12 Months" && (
-              <FilterPill 
-                label={`Time: ${timeFilter}`} 
-                value="time"
-                onRemove={() => handleFilterChange("time", "Last 12 Months")} 
-              />
-            )}
-            {towerFilter !== "All Towers" && (
-              <FilterPill 
-                label={`Tower: ${towerFilter}`} 
-                value="tower"
-                onRemove={() => handleFilterChange("tower", "All Towers")} 
-              />
-            )}
-            {userTagFilter !== "All User Types" && (
-              <FilterPill 
-                label={`User Type: ${userTagFilter}`} 
-                value="userTag"
-                onRemove={() => handleFilterChange("userTag", "All User Types")} 
-              />
-            )}
-            {surveyTagFilter !== "All Survey Tags" && (
-              <FilterPill 
-                label={`Survey Tag: ${surveyTagFilter}`} 
-                value="surveyTag"
-                onRemove={() => handleFilterChange("surveyTag", "All Survey Tags")} 
-              />
-            )}
-          </div>
-        </div>
+
+        {/* <div className="mt-2 d-flex flex-wrap gap-2">
+          {[...selectedSurveyTags, ...selectedUserTags].map((tag) => (
+            <FilterPill
+              key={tag.value}
+              label={tag.label}
+              onRemove={handleRemoveTag}
+            />
+          ))}
+        </div> */}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PageFilter;
+export default PageFilter
