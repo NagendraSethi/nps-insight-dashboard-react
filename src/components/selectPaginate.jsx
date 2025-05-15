@@ -26,8 +26,8 @@ const SelectAsyncPaginate = (props) => {
         }
       )
       .then((res) => {
-        return res?.data?.data
-      })
+        return res?.data?.data;
+      });
 
     return {
       options: response,
