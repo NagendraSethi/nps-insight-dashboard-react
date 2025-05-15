@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PageFilter from './PageFilter'
 import MetricCard from './MetricCard'
 import PieChart from './PieChart'
@@ -18,8 +18,19 @@ const NPSDashboard = () => {
     status: false,
     message: 'Loading...',
   })
-  const [surveyData, setSurveyData] = useState(npsData?.data || {})
+  const [surveyData, setSurveyData] = useState({})
   const [filterParams, setFilterParams] = useState({})
+
+  // Initialize survey data when component loads
+  useEffect(() => {
+    if (npsData && npsData.data) {
+      setSurveyData(npsData.data);
+      console.log("NPS data loaded successfully", npsData.data);
+    } else {
+      console.error("NPS data is empty or has an invalid structure");
+      setSurveyData({}); // Set to empty object to prevent errors
+    }
+  }, []);
 
   // Instead of fetching unique tags from the survey data, we can now use the imported tag files
   const uniqueSurveyTags = surveyTags.survey_tags || []
@@ -52,21 +63,23 @@ const NPSDashboard = () => {
     }, {});
   };
 
-  // Get filtered data with null check
+  // Get filtered data
   const filteredData = filterSurveyData();
 
-  // Add null checks to all calculations that use filteredData
+  // Safely calculate metrics with null checks
   const totalRecipients = Object.values(filteredData || {}).reduce(
-    (acc, survey) => acc + survey.totalRecipients,
+    (acc, survey) => acc + (survey.totalRecipients || 0),
     0
   )
+  
   const totalResponses = Object.values(filteredData || {}).reduce(
-    (acc, survey) => acc + survey.totalResponses,
+    (acc, survey) => acc + (survey.totalResponses || 0),
     0
   )
+  
   const avgNpsScore = Object.keys(filteredData || {}).length ? (
     Object.values(filteredData || {}).reduce(
-      (acc, survey) => acc + survey.npsScore,
+      (acc, survey) => acc + (survey.npsScore || 0),
       0
     ) / Object.keys(filteredData || {}).length
   ).toFixed(1) : "0.0";
@@ -75,55 +88,51 @@ const NPSDashboard = () => {
     {
       name: 'Promoters',
       value: Object.values(filteredData || {}).reduce(
-        (acc, survey) => acc + survey.promotersCount,
+        (acc, survey) => acc + (survey.promotersCount || 0),
         0
       ),
     },
     {
       name: 'Passives',
       value: Object.values(filteredData || {}).reduce(
-        (acc, survey) => acc + survey.passivesCount,
+        (acc, survey) => acc + (survey.passivesCount || 0),
         0
       ),
     },
     {
       name: 'Detractors',
       value: Object.values(filteredData || {}).reduce(
-        (acc, survey) => acc + survey.detractorsCount,
+        (acc, survey) => acc + (survey.detractorsCount || 0),
         0
       ),
     },
   ]
 
+  // Safely build stakeholder type data
   const stakeholderTypeMap = {}
 
-  // Add null check before iterating
-  if (filteredData) {
-    Object.values(filteredData).forEach((survey) => {
-      if (Array.isArray(survey.userTags)) {
-        survey.userTags.forEach((tag) => {
-          if (tag) {
-            stakeholderTypeMap[tag] = (stakeholderTypeMap[tag] || 0) + 1
-          }
-        })
-      }
-    })
-  }
+  Object.values(filteredData || {}).forEach((survey) => {
+    if (Array.isArray(survey.userTags)) {
+      survey.userTags.forEach((tag) => {
+        if (tag) {
+          stakeholderTypeMap[tag] = (stakeholderTypeMap[tag] || 0) + 1
+        }
+      })
+    }
+  })
 
+  // Safely build survey type data
   const surveyTypeMap = {}
 
-  // Add null check before iterating
-  if (filteredData) {
-    Object.values(filteredData).forEach((survey) => {
-      if (Array.isArray(survey.surveyTags)) {
-        survey.surveyTags.forEach((tag) => {
-          if (tag) {
-            surveyTypeMap[tag] = (surveyTypeMap[tag] || 0) + 1
-          }
-        })
-      }
-    })
-  }
+  Object.values(filteredData || {}).forEach((survey) => {
+    if (Array.isArray(survey.surveyTags)) {
+      survey.surveyTags.forEach((tag) => {
+        if (tag) {
+          surveyTypeMap[tag] = (surveyTypeMap[tag] || 0) + 1
+        }
+      })
+    }
+  })
 
   const stakeholderTypeData = Object.entries(
     stakeholderTypeMap
@@ -133,7 +142,6 @@ const NPSDashboard = () => {
     name,
     value,
   }))
-
 
   const responseRateColumns = [
     { header: 'Survey Name', key: 'surveyName' },
@@ -216,8 +224,8 @@ const NPSDashboard = () => {
                 <div className="col-12 col-lg-6">
                   <BarChart
                     data={Object.values(filteredData || {}).map((survey) => ({
-                      name: survey.surveyName,
-                      value: survey.totalResponses,
+                      name: survey.surveyName || "Unknown",
+                      value: survey.totalResponses || 0,
                     }))}
                     title="Survey Response Distribution"
                     infoText="Total responses for each survey"
@@ -226,11 +234,11 @@ const NPSDashboard = () => {
                 <div className="col-12 col-lg-6">
                   <StackedBarChart
                     data={Object.values(filteredData || {}).map((survey) => ({
-                      department: survey.surveyName,
-                      promoters: survey.promotersCount,
-                      passives: survey.passivesCount,
-                      detractors: survey.detractorsCount,
-                      total: survey.totalRecipients,
+                      department: survey.surveyName || "Unknown",
+                      promoters: survey.promotersCount || 0,
+                      passives: survey.passivesCount || 0,
+                      detractors: survey.detractorsCount || 0,
+                      total: survey.totalRecipients || 1, // Avoid division by zero
                     }))}
                     title="NPS Score by Survey"
                   />

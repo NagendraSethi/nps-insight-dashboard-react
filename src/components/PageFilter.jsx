@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { Select } from '@/components/ui/select'
+import { Select } from 'react-select'
 import { toast } from '@/hooks/use-toast'
 import { userTags } from '../data/userTags'
 import { surveyTags } from '../data/surveyTags'
@@ -79,7 +79,7 @@ const PageFilter = ({ setFilterParams }) => {
             <div className="d-flex align-items-center gap-2">
               <FontAwesomeIcon icon={faFilter} className="text-secondary" />
             </div>
-            <div style={{ width: '100%', maxWidth: '300px' }}>
+            <div style={{ width: '100%', maxWidth: '300px', zIndex: 100 }}>
               <Select
                 options={surveyOptions}
                 isMulti
@@ -88,9 +88,16 @@ const PageFilter = ({ setFilterParams }) => {
                 value={selectedSurveyTags}
                 className="basic-multi-select"
                 classNamePrefix="select"
+                styles={{
+                  menu: (base) => ({
+                    ...base,
+                    backgroundColor: 'white',
+                    zIndex: 100
+                  })
+                }}
               />
             </div>
-            <div style={{ width: '100%', maxWidth: '300px' }}>
+            <div style={{ width: '100%', maxWidth: '300px', zIndex: 100 }}>
               <Select
                 options={userOptions}
                 isMulti
@@ -99,6 +106,13 @@ const PageFilter = ({ setFilterParams }) => {
                 value={selectedUserTags}
                 className="basic-multi-select"
                 classNamePrefix="select"
+                styles={{
+                  menu: (base) => ({
+                    ...base,
+                    backgroundColor: 'white',
+                    zIndex: 100
+                  })
+                }}
               />
             </div>
             <div
