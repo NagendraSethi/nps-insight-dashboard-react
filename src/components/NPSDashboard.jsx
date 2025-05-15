@@ -1,107 +1,87 @@
 
-import React, { useEffect, useState, useContext } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react'
 import PageFilter from './PageFilter'
 import MetricCard from './MetricCard'
-// import RegionBreakdown from './RegionBreakdown'
 import PieChart from './PieChart'
 import BarChart from './BarChart'
 import DataTable from './DataTable'
 import StackedBarChart from './StackedBarChart'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChartLine } from '@fortawesome/free-solid-svg-icons'
-import { AuthContext } from '../context/authProvider'
 import LoadingStatus from '../Helper/LoadingStatus'
-import { npsData } from '../data/npsData';
+import { npsData } from '../data/npsData'
+import { surveyTags } from '../data/surveyTags'
+import { userTags } from '../data/userTags'
 
 const NPSDashboard = () => {
   const [loadingStatus, setLoadingStatus] = useState({
     status: false,
     message: 'Loading...',
   })
-  const [surveyData, setSurveyData] = useState({})
-  const [error, setError] = useState(null)
+  const [surveyData, setSurveyData] = useState(npsData.data || {})
   const [filterParams, setFilterParams] = useState({})
 
-  const uniqueSurveyTags = [
-    ...new Set(
-      Object.values(surveyData).flatMap((survey) => survey.surveyTags || [])
-    ),
-  ]
-  const uniqueUserTags = [
-    ...new Set(
-      Object.values(surveyData).flatMap((survey) => survey.userTags || [])
-    ),
-  ]
+  // Instead of fetching unique tags from the survey data, we can now use the imported tag files
+  const uniqueSurveyTags = surveyTags.survey_tags
+  const uniqueUserTags = userTags.user_tags
 
-  const [authCreds] = useContext(AuthContext)
-  const endpoint = authCreds.restEndpoint
-  let post_headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('token')}`,
-    khuser: `${localStorage.getItem('user')}`,
-  }
-
-  useEffect(() => {
-    const fetchSurveyMetrics = async () => {
-      try {
-        setLoadingStatus({ status: true, message: 'Loading...' })
-        const queryParams = new URLSearchParams({
-          tag_filters: JSON.stringify(filterParams),
-        }).toString()
-        // const url = `${endpoint}/api/survey/get_all_survey_metrics?${queryParams}`
-        // const response = await axios.get(url, {
-        //   headers: post_headers,
-        // })
-        const response = npsData
-        setSurveyData(response.data || {})
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setFilterParams(setFilterParams)
-        setLoadingStatus({ status: false, message: '' })
-      }
+  // Filter data based on selected tags if needed
+  const filterSurveyData = () => {
+    if (!filterParams.survey_tags?.length && !filterParams.user_tags?.length) {
+      return npsData.data;
     }
 
-    fetchSurveyMetrics()
-  }, [filterParams])
+    return Object.entries(npsData.data).reduce((filtered, [key, survey]) => {
+      const matchesSurveyTags = !filterParams.survey_tags?.length || 
+        filterParams.survey_tags.some(tag => survey.surveyTags?.includes(tag));
+      
+      const matchesUserTags = !filterParams.user_tags?.length || 
+        filterParams.user_tags.some(tag => survey.userTags?.includes(tag));
+      
+      if (matchesSurveyTags && matchesUserTags) {
+        filtered[key] = survey;
+      }
+      
+      return filtered;
+    }, {});
+  };
 
-  if (error) return <p>Error fetching survey metrics: {error}</p>
+  // Get filtered data
+  const filteredData = filterSurveyData();
 
-  const totalRecipients = Object.values(surveyData).reduce(
+  const totalRecipients = Object.values(filteredData).reduce(
     (acc, survey) => acc + survey.totalRecipients,
     0
   )
-  const totalResponses = Object.values(surveyData).reduce(
+  const totalResponses = Object.values(filteredData).reduce(
     (acc, survey) => acc + survey.totalResponses,
     0
   )
-  const avgNpsScore = (
-    Object.values(surveyData).reduce(
+  const avgNpsScore = Object.keys(filteredData).length ? (
+    Object.values(filteredData).reduce(
       (acc, survey) => acc + survey.npsScore,
       0
-    ) / Object.keys(surveyData).length
-  ).toFixed(1)
+    ) / Object.keys(filteredData).length
+  ).toFixed(1) : "0.0";
 
   const categoryData = [
     {
       name: 'Promoters',
-      value: Object.values(surveyData).reduce(
+      value: Object.values(filteredData).reduce(
         (acc, survey) => acc + survey.promotersCount,
         0
       ),
     },
     {
       name: 'Passives',
-      value: Object.values(surveyData).reduce(
+      value: Object.values(filteredData).reduce(
         (acc, survey) => acc + survey.passivesCount,
         0
       ),
     },
     {
       name: 'Detractors',
-      value: Object.values(surveyData).reduce(
+      value: Object.values(filteredData).reduce(
         (acc, survey) => acc + survey.detractorsCount,
         0
       ),
@@ -110,7 +90,7 @@ const NPSDashboard = () => {
 
   const stakeholderTypeMap = {}
 
-  Object.values(surveyData).forEach((survey) => {
+  Object.values(filteredData).forEach((survey) => {
     if (Array.isArray(survey.userTags)) {
       survey.userTags.forEach((tag) => {
         if (tag) {
@@ -122,7 +102,7 @@ const NPSDashboard = () => {
 
   const surveyTypeMap = {}
 
-  Object.values(surveyData).forEach((survey) => {
+  Object.values(filteredData).forEach((survey) => {
     if (Array.isArray(survey.surveyTags)) {
       survey.surveyTags.forEach((tag) => {
         if (tag) {
@@ -161,16 +141,10 @@ const NPSDashboard = () => {
                 <FontAwesomeIcon icon={faChartLine} className="me-2" />
                 NPS Analytics Dashboard
               </h1>
-              {/* <p className="text-secondary mt-1">
-                Track customer satisfaction and loyalty metrics
-              </p> */}
             </div>
 
             <PageFilter
-              surveyTags={uniqueSurveyTags}
-              userTags={uniqueUserTags}
               setFilterParams={setFilterParams}
-              filterParams={filterParams}
             />
 
             <div className="mb-4">
@@ -228,7 +202,7 @@ const NPSDashboard = () => {
               <div className="row g-4 mb-4">
                 <div className="col-12 col-lg-6">
                   <BarChart
-                    data={Object.values(surveyData).map((survey) => ({
+                    data={Object.values(filteredData).map((survey) => ({
                       name: survey.surveyName,
                       value: survey.totalResponses,
                     }))}
@@ -238,7 +212,7 @@ const NPSDashboard = () => {
                 </div>
                 <div className="col-12 col-lg-6">
                   <StackedBarChart
-                    data={Object.values(surveyData).map((survey) => ({
+                    data={Object.values(filteredData).map((survey) => ({
                       department: survey.surveyName,
                       promoters: survey.promotersCount,
                       passives: survey.passivesCount,
@@ -254,7 +228,7 @@ const NPSDashboard = () => {
             <DataTable
               title="Survey Overview"
               columns={responseRateColumns}
-              data={Object.values(surveyData)}
+              data={Object.values(filteredData)}
             />
           </div>
         </>

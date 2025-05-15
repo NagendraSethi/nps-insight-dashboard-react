@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons'
-import SelectAsyncPaginate from './selectPaginate'
+import { Select } from '@/components/ui/select'
 import { toast } from '@/hooks/use-toast'
+import { userTags } from '../data/userTags'
+import { surveyTags } from '../data/surveyTags'
 
-const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
+const PageFilter = ({ setFilterParams }) => {
   const [selectedSurveyTags, setSelectedSurveyTags] = useState(
     JSON.parse(localStorage.getItem('selectedSurveyTags')) || []
   )
@@ -25,8 +27,9 @@ const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
     }
   }, [selectedSurveyTags, selectedUserTags])
 
-  const surveyOptions = surveyTags.map((tag) => ({ label: tag, value: tag }))
-  const userOptions = userTags.map((tag) => ({ label: tag, value: tag }))
+  // Create options from the imported tags data
+  const surveyOptions = surveyTags.survey_tags.map((tag) => ({ label: tag, value: tag }))
+  const userOptions = userTags.user_tags.map((tag) => ({ label: tag, value: tag }))
 
   const handleReset = () => {
     if (selectedSurveyTags?.length > 0 || selectedUserTags?.length > 0) {
@@ -60,6 +63,14 @@ const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
     }
   }
   
+  const handleSurveyTagChange = (selectedOptions) => {
+    setSelectedSurveyTags(selectedOptions || []);
+  };
+
+  const handleUserTagChange = (selectedOptions) => {
+    setSelectedUserTags(selectedOptions || []);
+  };
+  
   return (
     <div className="card shadow-sm mb-4">
       <div className="card-body">
@@ -68,22 +79,28 @@ const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
             <div className="d-flex align-items-center gap-2">
               <FontAwesomeIcon icon={faFilter} className="text-secondary" />
             </div>
-            <SelectAsyncPaginate
-              width="100%"
-              isSearchable={true}
-              placeholder={'Select Survey Tags'}
-              onChange={setSelectedSurveyTags}
-              defaultValue={selectedSurveyTags}
-              endpointUrl="api/survey/get_survey_tags"
-            />
-            <SelectAsyncPaginate
-              width="100%"
-              isSearchable={true}
-              placeholder={'Select User Tags'}
-              onChange={setSelectedUserTags}
-              defaultValue={selectedUserTags}
-              endpointUrl="api/survey/get_user_tags"
-            />
+            <div style={{ width: '100%', maxWidth: '300px' }}>
+              <Select
+                options={surveyOptions}
+                isMulti
+                placeholder="Select Survey Tags"
+                onChange={handleSurveyTagChange}
+                value={selectedSurveyTags}
+                className="basic-multi-select"
+                classNamePrefix="select"
+              />
+            </div>
+            <div style={{ width: '100%', maxWidth: '300px' }}>
+              <Select
+                options={userOptions}
+                isMulti
+                placeholder="Select User Tags"
+                onChange={handleUserTagChange}
+                value={selectedUserTags}
+                className="basic-multi-select"
+                classNamePrefix="select"
+              />
+            </div>
             <div
               className="apply-filter d-flex align-items-center text-primary cursor-pointer"
               role="button"

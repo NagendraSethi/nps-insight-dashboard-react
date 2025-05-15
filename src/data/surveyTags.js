@@ -1,4 +1,4 @@
 
 export const surveyTags = {
-    "survey_tags": ["survey_tag1", "survey_tag2", "survey_tag3"]
+    "survey_tags": ["Product Feedback", "Customer Service", "Onboarding", "General", "Feature Request", "Quarterly Review"]
 }

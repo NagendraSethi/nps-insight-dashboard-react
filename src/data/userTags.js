@@ -1,3 +1,4 @@
+
 export const userTags = {
-    "user_tags": ["tag1", "tag2", "tag3"]
+    "user_tags": ["Manager", "Director", "VP", "C-Level", "Regular User", "New Customer", "Enterprise", "SMB"]
 }
