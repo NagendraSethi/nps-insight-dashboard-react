@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { Select } from 'react-select'
+import Select from 'react-select' // Changed from { Select } to Select
 import { toast } from '@/hooks/use-toast'
 import { userTags } from '../data/userTags'
 import { surveyTags } from '../data/surveyTags'
@@ -93,6 +93,10 @@ const PageFilter = ({ setFilterParams }) => {
                     ...base,
                     backgroundColor: 'white',
                     zIndex: 100
+                  }),
+                  control: (base) => ({
+                    ...base,
+                    backgroundColor: 'white'
                   })
                 }}
               />
@@ -111,6 +115,10 @@ const PageFilter = ({ setFilterParams }) => {
                     ...base,
                     backgroundColor: 'white',
                     zIndex: 100
+                  }),
+                  control: (base) => ({
+                    ...base,
+                    backgroundColor: 'white'
                   })
                 }}
               />
