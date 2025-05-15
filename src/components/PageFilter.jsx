@@ -1,9 +1,9 @@
+
 import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons'
-import SelectAsyncPaginate from '../../../Utilities/selectPaginate'
-// import Select from 'react-select'
+import SelectAsyncPaginate from './selectPaginate'
+
 const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
   const [selectedSurveyTags, setSelectedSurveyTags] = useState(
     JSON.parse(localStorage.getItem('selectedSurveyTags')) || []
@@ -47,13 +47,11 @@ const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
           <div className="d-flex flex-column flex-md-row gap-3 mb-3">
             <div className="d-flex align-items-center gap-2">
               <FontAwesomeIcon icon={faFilter} className="text-secondary" />
-              {/* <div className="fw-medium text-dark">Page Filters</div> */}
             </div>
             <SelectAsyncPaginate
               width="100%"
               isSearchable={true}
               placeholder={'Select Survey Tags'}
-              loadOptions={surveyOptions}
               onChange={setSelectedSurveyTags}
               defaultValue={selectedSurveyTags}
               endpointUrl="api/survey/get_survey_tags"
@@ -62,7 +60,6 @@ const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
               width="100%"
               isSearchable={true}
               placeholder={'Select User Tags'}
-              loadOptions={userOptions}
               onChange={setSelectedUserTags}
               defaultValue={selectedUserTags}
               endpointUrl="api/survey/get_user_tags"
@@ -90,16 +87,6 @@ const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
             )}
           </div>
         </div>
-
-        {/* <div className="mt-2 d-flex flex-wrap gap-2">
-          {[...selectedSurveyTags, ...selectedUserTags].map((tag) => (
-            <FilterPill
-              key={tag.value}
-              label={tag.label}
-              onRemove={handleRemoveTag}
-            />
-          ))}
-        </div> */}
       </div>
     </div>
   )

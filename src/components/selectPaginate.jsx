@@ -1,3 +1,4 @@
+
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { AsyncPaginate } from 'react-select-async-paginate'
@@ -16,7 +17,7 @@ const SelectAsyncPaginate = (props) => {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
       khuser: `${localStorage.getItem('user')}`,
     }
-    console.log(props)
+    
     const response = await axios
       .get(
         `${endpoint}/${props.endpointUrl}?page_number=${page}&page_size=10&filters=[]&sort=[]&search_term=${searchQuery}`,
@@ -66,6 +67,13 @@ const SelectAsyncPaginate = (props) => {
 
 SelectAsyncPaginate.propTypes = {
   onChange: PropTypes.func,
+  endpointUrl: PropTypes.string,
+  width: PropTypes.string,
+  defaultOptions: PropTypes.array,
+  defaultValue: PropTypes.array,
+  isSearchable: PropTypes.bool,
+  isDisabled: PropTypes.bool,
+  placeholder: PropTypes.string
 }
 
 export default SelectAsyncPaginate
