@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
 import PageFilter from './PageFilter'
@@ -9,8 +10,8 @@ import DataTable from './DataTable'
 import StackedBarChart from './StackedBarChart'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChartLine } from '@fortawesome/free-solid-svg-icons'
-import { AuthContext } from '../../../../context/authProvider'
-import LoadingStatus from '../../../../Helper/LoadingStatus'
+import { AuthContext } from '../context/authProvider'
+import LoadingStatus from '../Helper/LoadingStatus'
 import { npsData } from '../data/npsData';
 
 const NPSDashboard = () => {
