@@ -2,7 +2,7 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { AsyncPaginate } from 'react-select-async-paginate'
-import { AuthContext } from '../../context/authProvider'
+import { AuthContext } from '../context/authProvider'
 import axios from 'axios'
 
 const SelectAsyncPaginate = (props) => {
