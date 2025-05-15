@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter, faTimes } from '@fortawesome/free-solid-svg-icons'
 import SelectAsyncPaginate from './selectPaginate'
+import { toast } from '@/hooks/use-toast'
 
 const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
   const [selectedSurveyTags, setSelectedSurveyTags] = useState(
@@ -13,11 +14,15 @@ const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
   )
 
   useEffect(() => {
-    localStorage.setItem(
-      'selectedSurveyTags',
-      JSON.stringify(selectedSurveyTags)
-    )
-    localStorage.setItem('selectedUserTags', JSON.stringify(selectedUserTags))
+    try {
+      localStorage.setItem(
+        'selectedSurveyTags',
+        JSON.stringify(selectedSurveyTags)
+      )
+      localStorage.setItem('selectedUserTags', JSON.stringify(selectedUserTags))
+    } catch (error) {
+      console.error('Error saving to localStorage:', error)
+    }
   }, [selectedSurveyTags, selectedUserTags])
 
   const surveyOptions = surveyTags.map((tag) => ({ label: tag, value: tag }))
@@ -28,6 +33,10 @@ const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
       setSelectedSurveyTags([])
       setSelectedUserTags([])
       setFilterParams({})
+      toast({
+        title: 'Filters Reset',
+        description: 'All filters have been cleared.',
+      })
     }
   }
 
@@ -38,8 +47,19 @@ const PageFilter = ({ surveyTags, userTags, setFilterParams }) => {
         user_tags: selectedUserTags.map((tag) => tag.value),
       }
       setFilterParams(filterParams)
+      toast({
+        title: 'Filters Applied',
+        description: 'Your filters have been applied to the data.',
+      })
+    } else {
+      toast({
+        title: 'No Filters Selected',
+        description: 'Please select at least one filter to apply.',
+        variant: 'default',
+      })
     }
   }
+  
   return (
     <div className="card shadow-sm mb-4">
       <div className="card-body">
