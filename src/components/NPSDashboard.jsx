@@ -18,15 +18,21 @@ const NPSDashboard = () => {
     status: false,
     message: 'Loading...',
   })
-  const [surveyData, setSurveyData] = useState(npsData.data || {})
+  const [surveyData, setSurveyData] = useState(npsData?.data || {})
   const [filterParams, setFilterParams] = useState({})
 
   // Instead of fetching unique tags from the survey data, we can now use the imported tag files
-  const uniqueSurveyTags = surveyTags.survey_tags
-  const uniqueUserTags = userTags.user_tags
+  const uniqueSurveyTags = surveyTags.survey_tags || []
+  const uniqueUserTags = userTags.user_tags || []
 
   // Filter data based on selected tags if needed
   const filterSurveyData = () => {
+    // Add a null check to ensure npsData.data exists
+    if (!npsData || !npsData.data) {
+      console.error('NPS data is missing or invalid');
+      return {};
+    }
+    
     if (!filterParams.survey_tags?.length && !filterParams.user_tags?.length) {
       return npsData.data;
     }
@@ -46,42 +52,43 @@ const NPSDashboard = () => {
     }, {});
   };
 
-  // Get filtered data
+  // Get filtered data with null check
   const filteredData = filterSurveyData();
 
-  const totalRecipients = Object.values(filteredData).reduce(
+  // Add null checks to all calculations that use filteredData
+  const totalRecipients = Object.values(filteredData || {}).reduce(
     (acc, survey) => acc + survey.totalRecipients,
     0
   )
-  const totalResponses = Object.values(filteredData).reduce(
+  const totalResponses = Object.values(filteredData || {}).reduce(
     (acc, survey) => acc + survey.totalResponses,
     0
   )
-  const avgNpsScore = Object.keys(filteredData).length ? (
-    Object.values(filteredData).reduce(
+  const avgNpsScore = Object.keys(filteredData || {}).length ? (
+    Object.values(filteredData || {}).reduce(
       (acc, survey) => acc + survey.npsScore,
       0
-    ) / Object.keys(filteredData).length
+    ) / Object.keys(filteredData || {}).length
   ).toFixed(1) : "0.0";
 
   const categoryData = [
     {
       name: 'Promoters',
-      value: Object.values(filteredData).reduce(
+      value: Object.values(filteredData || {}).reduce(
         (acc, survey) => acc + survey.promotersCount,
         0
       ),
     },
     {
       name: 'Passives',
-      value: Object.values(filteredData).reduce(
+      value: Object.values(filteredData || {}).reduce(
         (acc, survey) => acc + survey.passivesCount,
         0
       ),
     },
     {
       name: 'Detractors',
-      value: Object.values(filteredData).reduce(
+      value: Object.values(filteredData || {}).reduce(
         (acc, survey) => acc + survey.detractorsCount,
         0
       ),
@@ -90,27 +97,33 @@ const NPSDashboard = () => {
 
   const stakeholderTypeMap = {}
 
-  Object.values(filteredData).forEach((survey) => {
-    if (Array.isArray(survey.userTags)) {
-      survey.userTags.forEach((tag) => {
-        if (tag) {
-          stakeholderTypeMap[tag] = (stakeholderTypeMap[tag] || 0) + 1
-        }
-      })
-    }
-  })
+  // Add null check before iterating
+  if (filteredData) {
+    Object.values(filteredData).forEach((survey) => {
+      if (Array.isArray(survey.userTags)) {
+        survey.userTags.forEach((tag) => {
+          if (tag) {
+            stakeholderTypeMap[tag] = (stakeholderTypeMap[tag] || 0) + 1
+          }
+        })
+      }
+    })
+  }
 
   const surveyTypeMap = {}
 
-  Object.values(filteredData).forEach((survey) => {
-    if (Array.isArray(survey.surveyTags)) {
-      survey.surveyTags.forEach((tag) => {
-        if (tag) {
-          surveyTypeMap[tag] = (surveyTypeMap[tag] || 0) + 1
-        }
-      })
-    }
-  })
+  // Add null check before iterating
+  if (filteredData) {
+    Object.values(filteredData).forEach((survey) => {
+      if (Array.isArray(survey.surveyTags)) {
+        survey.surveyTags.forEach((tag) => {
+          if (tag) {
+            surveyTypeMap[tag] = (surveyTypeMap[tag] || 0) + 1
+          }
+        })
+      }
+    })
+  }
 
   const stakeholderTypeData = Object.entries(
     stakeholderTypeMap
@@ -202,7 +215,7 @@ const NPSDashboard = () => {
               <div className="row g-4 mb-4">
                 <div className="col-12 col-lg-6">
                   <BarChart
-                    data={Object.values(filteredData).map((survey) => ({
+                    data={Object.values(filteredData || {}).map((survey) => ({
                       name: survey.surveyName,
                       value: survey.totalResponses,
                     }))}
@@ -212,7 +225,7 @@ const NPSDashboard = () => {
                 </div>
                 <div className="col-12 col-lg-6">
                   <StackedBarChart
-                    data={Object.values(filteredData).map((survey) => ({
+                    data={Object.values(filteredData || {}).map((survey) => ({
                       department: survey.surveyName,
                       promoters: survey.promotersCount,
                       passives: survey.passivesCount,
@@ -228,7 +241,7 @@ const NPSDashboard = () => {
             <DataTable
               title="Survey Overview"
               columns={responseRateColumns}
-              data={Object.values(filteredData)}
+              data={Object.values(filteredData || {})}
             />
           </div>
         </>
